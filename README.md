@@ -30,15 +30,21 @@ Alles läuft über die **kostenlose** Gemini-API-Stufe.
    ```bash
    npm run dev
    ```
-4. <http://localhost:3000> öffnen (Chrome oder Edge empfohlen), Mikrofon erlauben, **Kopfhörer** verwenden.
+4. <http://localhost:3000> öffnen (Firefox, Chrome oder Edge), Mikrofon erlauben, **Kopfhörer** verwenden.
 
-## Mit anderen teilen (Testphase)
+## Zugangscodes
 
-1. Doppelklick auf `App-teilen.cmd`. Das Fenster zeigt nach kurzer Zeit einen Link `https://….trycloudflare.com`.
-2. Link + Zugangscode (`ACCESS_CODE` in `.env.local`) weitergeben.
-3. Das Fenster offen lassen. Der Link funktioniert nur, solange der PC an ist und das Fenster läuft. Bei jedem Start gibt es einen neuen Link.
+- **Master-Code** (`MASTER_CODE`): gilt für immer, mehrere Geräte erlaubt, öffnet die Verwaltung unter `/admin`.
+- **Persönliche Codes** werden in der Verwaltung erstellt (Testzugang 24 h, 7 Tage, 30 Tage oder frei) und per WhatsApp weitergegeben.
+  - Laufzeit beginnt mit der ersten Anmeldung.
+  - Ein Code gilt nur auf einem Gerät: Eine neue Anmeldung meldet das vorherige Gerät ab (spätestens nach ca. 1 Minute).
+  - Verlängern, Gerät abmelden, sperren, löschen: in der Verwaltung.
+- Gespeichert in Neon-Postgres (`DATABASE_URL`, Projekt `dentsim`, Frankfurt). Tabelle wird automatisch angelegt.
+- Lokal ohne `MASTER_CODE` ist die App offen (nur für Entwicklung). In Produktion ist sie ohne `MASTER_CODE` gesperrt.
 
-Ohne `ACCESS_CODE` ist die App ungeschützt – dann kann jeder mit dem Link das Gemini-Kontingent verbrauchen.
+## Vorübergehend über den eigenen PC teilen
+
+Doppelklick auf `App-teilen.cmd` → Link `https://….trycloudflare.com` erscheint. Funktioniert nur, solange PC und Fenster laufen.
 
 ## Dauerhaft online (Render, kostenlos)
 
@@ -46,7 +52,7 @@ Konfiguration: [`render.yaml`](render.yaml) (Region Frankfurt, Free-Plan, Node 2
 
 1. Code in ein **privates** GitHub-Repository hochladen.
 2. Auf <https://dashboard.render.com> mit GitHub anmelden → **New → Blueprint** → Repository auswählen.
-3. Render fragt nach `GEMINI_API_KEY` und `ACCESS_CODE` → eintragen → **Deploy**.
+3. Render fragt nach `GEMINI_API_KEY`, `MASTER_CODE` und `DATABASE_URL` (gepoolte Neon-Adresse) → eintragen → **Deploy**.
 4. Nach ca. 5 Minuten ist die App unter `https://dentsim-fsp….onrender.com` erreichbar.
 
 Jeder neue Commit auf `main` wird automatisch neu veröffentlicht. Geheimwerte später im Render-Dashboard unter **Environment** ändern.
