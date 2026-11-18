@@ -1,0 +1,23 @@
+# Render Blueprint: dauerhaftes Hosting der Testversion (kostenlose Stufe, Frankfurt)
+# Geheime Werte (sync: false) fragt Render beim ersten Anlegen im Dashboard ab –
+# sie stehen nie in diesem Repository.
+services:
+  - type: web
+    name: dentsim-fsp
+    runtime: node
+    plan: free
+    region: frankfurt
+    buildCommand: npm ci && npm run build
+    startCommand: npm run start
+    healthCheckPath: /zugang
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: ACCESS_CODE
+        sync: false
+      - key: GEMINI_LIVE_MODEL
+        value: gemini-3.8-live
+      - key: GEMINI_EVAL_MODELS
+        value: gemini-3.8-flash,gemini-3.6-flash,gemini-3.5-flash-lite
+      - key: NEXT_TELEMETRY_DISABLED
+        value: "1"
