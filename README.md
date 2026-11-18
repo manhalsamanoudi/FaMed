@@ -40,6 +40,18 @@ Alles läuft über die **kostenlose** Gemini-API-Stufe.
 
 Ohne `ACCESS_CODE` ist die App ungeschützt – dann kann jeder mit dem Link das Gemini-Kontingent verbrauchen.
 
+## Dauerhaft online (Render, kostenlos)
+
+Konfiguration: [`render.yaml`](render.yaml) (Region Frankfurt, Free-Plan, Node 24 über `.node-version`).
+
+1. Code in ein **privates** GitHub-Repository hochladen.
+2. Auf <https://dashboard.render.com> mit GitHub anmelden → **New → Blueprint** → Repository auswählen.
+3. Render fragt nach `GEMINI_API_KEY` und `ACCESS_CODE` → eintragen → **Deploy**.
+4. Nach ca. 5 Minuten ist die App unter `https://dentsim-fsp….onrender.com` erreichbar.
+
+Jeder neue Commit auf `main` wird automatisch neu veröffentlicht. Geheimwerte später im Render-Dashboard unter **Environment** ändern.
+Kostenlose Stufe: Nach 15 Minuten ohne Nutzung schläft die App ein, das erste Öffnen dauert dann ca. 1 Minute.
+
 ## Befehle
 
 | Befehl | Zweck |
