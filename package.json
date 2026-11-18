@@ -13,6 +13,8 @@
   },
   "dependencies": {
     "@google/genai": "^3.4.0",
+    "@neon/config": "^1.14.3",
+    "@neon/env": "^2.1.6",
     "@neondatabase/serverless": "^1.2.1",
     "next": "16.4.6",
     "react": "19.3.0",

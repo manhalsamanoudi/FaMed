@@ -39,7 +39,7 @@ describe("Code-Hilfsfunktionen", () => {
       art: "test",
     });
     expect(msg).toContain("Hallo Dr. Ahmad!");
-    expect(msg).toContain("Testzugang");
+    expect(msg).toContain("Hier ist dein Testzugang");
     expect(msg).toContain("Molar-1234-Krone");
     expect(msg).toContain("1 Tag ab der ersten Anmeldung");
     expect(whatsappLink(msg)).toMatch(/^https:\/\/wa\.me\/\?text=Hallo%20Dr\.%20Ahmad/);

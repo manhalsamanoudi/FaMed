@@ -9,7 +9,7 @@ export function buildShareMessage(input: {
   art: "nutzer" | "test";
 }): string {
   const greeting = input.name ? `Hallo ${input.name}!` : "Hallo!";
-  const what = input.art === "test" ? "deinen Testzugang" : "deinen Zugang";
+  const what = input.art === "test" ? "dein Testzugang" : "dein Zugang";
   return [
     `${greeting} Hier ist ${what} zum Prüfungstraining FaMed Zahnmedizin (DentSim FSP):`,
     "",
@@ -17,7 +17,7 @@ export function buildShareMessage(input: {
     `🔑 Code: ${input.code}`,
     `⏱ Gültig: ${formatDuration(input.laufzeitStunden)} ab der ersten Anmeldung`,
     "",
-    "Wichtig: Der Code funktioniert immer nur auf einem Gerät. Bitte am Computer mit Chrome oder Edge und Kopfhörern öffnen und das Mikrofon erlauben.",
+    "Wichtig: Der Code funktioniert immer nur auf einem Gerät. Bitte am Computer mit Firefox, Chrome oder Edge und Kopfhörern öffnen und das Mikrofon erlauben.",
     "Falls die Seite beim ersten Öffnen etwa eine Minute lädt: kurz warten.",
   ].join("\n");
 }
