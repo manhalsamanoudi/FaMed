@@ -2,7 +2,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { listCases, listCasesByStation } from "@/content/cases";
-import { buildEvaluationPrompt, buildLetterEvaluationPrompt } from "@/lib/evaluation/prompt";
+import { buildEvaluationPrompt, buildLetterEvaluationPrompt, ohneRegie } from "@/lib/evaluation/prompt";
 import { buildActorInstruction } from "@/lib/live/actor-prompt";
 import { stationTypeSchema, toPublicCase } from "./schema";
 
@@ -115,9 +115,32 @@ describe("Arztbrief", () => {
 
   it.each(briefe)("$id: Bewertungsprompt enthält Gespräch, Brief und Checkliste", (c) => {
     const prompt = buildLetterEvaluationPrompt(c, "Sehr geehrte Kollegin, …");
-    expect(prompt).toContain(c.arztbrief!.dialog[1].text);
+    expect(prompt).toContain(ohneRegie(c.arztbrief!.dialog[1].text));
     expect(prompt).toContain("Sehr geehrte Kollegin");
+    expect(prompt).toContain(c.arztbrief!.musterbrief);
+    expect(prompt).not.toMatch(/\[(seufzt|lacht|hustet)/);
     for (const item of c.rubric.checklist) expect(prompt).toContain(`"${item.id}"`);
+  });
+
+  it.each(briefe)("$id: Musterbrief folgt dem FaMed-Aufbau", (c) => {
+    const m = c.arztbrief!.musterbrief;
+    expect(m).toMatch(/^Sehr geehrte/);
+    expect(m).toMatch(/wir berichten über/);
+    for (const abschnitt of ["Vorerkrankungen:", "Klinische Untersuchung:", "Therapie:", "Procedere:"]) {
+      expect(m).toContain(abschnitt);
+    }
+    expect(m.trim()).toMatch(/Grüßen$/);
+  });
+
+  it.each(briefe)("$id: Gespräch hat Sprechweisen für natürliche Stimmen", (c) => {
+    expect(c.arztbrief!.sprechweise).toBeDefined();
+    expect(STIMMEN.has(c.arztbrief!.sprecher.Zahnarzt)).toBe(true);
+    expect(STIMMEN.has(c.arztbrief!.sprecher.Patient)).toBe(true);
+  });
+
+  it("ohneRegie entfernt Geräusch-Anweisungen", () => {
+    expect(ohneRegie("Ja … [seufzt] seit gestern.")).toBe("Ja … seit gestern.");
+    expect(ohneRegie("[lacht kurz] Nee.")).toBe("Nee.");
   });
 });
 

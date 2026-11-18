@@ -59,9 +59,14 @@ ${
 - Alle Texte auf Deutsch. Antworte nur mit dem JSON-Objekt.`;
 }
 
+/** Entfernt Regieanweisungen für die Sprachausgabe wie „[seufzt]“. */
+export function ohneRegie(text: string): string {
+  return text.replace(/\s*\[[^\]]*\]\s*/g, " ").replace(/\s{2,}/g, " ").trim();
+}
+
 export function buildLetterEvaluationPrompt(c: Case, letter: string): string {
   const a = c.arztbrief!;
-  const dialog = a.dialog.map((d) => `${d.sprecher}: ${d.text}`).join("\n");
+  const dialog = a.dialog.map((d) => `${d.sprecher}: ${ohneRegie(d.text)}`).join("\n");
   return `Du bist ein erfahrenes Bewertungsteam (approbierte:r Zahnärzt:in + DaF-Expert:in) für die FaMed Zahnmedizin (Fachsprachenprüfung, Niveau C1 nach GER), schriftliche Station „Arztbrief“. Bewerte ausschließlich die SPRACHKOMPETENZ, nicht das Fachwissen.
 
 ## Aufgabenblatt
@@ -77,13 +82,30 @@ ${dialog}
 ${letter}
 """
 
+## Musterlösung (Referenz, nicht die einzig richtige Lösung)
+"""
+${a.musterbrief}
+"""
+
+## Korrekturregeln nach dem FaMed-Musterbrief
+1. Aufbau: Anrede („Sehr geehrte Kolleginnen und Kollegen,“ o. Ä.) → Einleitungssatz mit Name, Alter und Vorstellungsgrund („Wir berichten über unsere gemeinsame Patientin …, die sich aufgrund … in unserer Praxis vorstellte.“) → aktuelle Anamnese → Vorerkrankungen/Medikation/Allergien/Noxen → Klinische Untersuchung → Röntgenbefund → Therapie → Procedere → Grußformel. Zwischenüberschriften sind erwünscht, aber kein Muss.
+2. Alles in GANZEN SÄTZEN. Stichpunkte aus dem Aufgabenblatt müssen in vollständige Sätze umgeformt werden; Stichpunktlisten im Brief sind ein Fehler (Textsorte).
+3. Distanz: Alles, was die Patientin/der Patient erzählt hat, steht in indirekter Rede, vorzugsweise im Konjunktiv I („Die Schmerzen seien pochend.“, „Sie leide unter …“, „Relevante Allergien seien nicht bekannt.“) oder mit Einleitung („Die Patientin berichtete, seit … unter … zu leiden.“). Indikativ bei Patientenaussagen = Fehler (Register).
+4. Eigene Befunde und Maßnahmen stehen im INDIKATIV Präteritum, gern im Passiv oder mit „erfolgte“: „Die extraorale Untersuchung war unauffällig.“, „Intraoral zeigte sich …“, „Therapeutisch erfolgte …“, „Anschließend wurde … eingebracht.“ Konjunktiv bei eigenen Befunden ist ebenfalls ein Fehler.
+5. Procedere mit Zukunftsbezug: „… ist in einer Woche geplant.“ / „Wir empfehlen …“.
+6. Fachsprache: Umgangssprachliche Patientenwörter in Fachbegriffe übertragen (z. B. „Bluthochdruck“ → arterielle Hypertonie, „wird immer schlimmer“ → progredient, „unten links“ → linker Unterkiefer/regio 3x). Zahnangaben im FDI-Schema.
+7. Textverknüpfung: Konnektoren und Relativsätze (zudem, darüber hinaus, jedoch, anschließend, die …) statt aneinandergereihter Hauptsätze.
+8. Vollständigkeit und Korrektheit: Alle Informationen aus Gespräch UND Aufgabenblatt. Falsch übernommene Fakten (Zahn, Seite, Dosierung, Einnahmeschema, Allergie, Zeitangaben) sind schwerwiegende Fehler, weil sie die Patientensicherheit gefährden.
+9. Schwere der Fehler: Fehler, die das Verständnis beeinträchtigen, wiegen schwerer als kleine Rechtschreibfehler.
+
 ## Bewertungskriterien (je 0–100 Punkte, Bestehensgrenze 60)
-- textsorte: Merkmale eines Arztbriefs: Briefform, Gliederung (Anlass, Anamnese, Befunde, Therapie, Procedere), ganze Sätze, Vollständigkeit aller Informationen aus Gespräch und Aufgabenblatt.
-- pragmatik: Fachsprache statt Umgangssprache, angemessene Distanz bei Patientenaussagen (Konjunktiv I / indirekte Rede), sachlicher Stil, Adressatenbezug (Kollege/Kollegin).
-- strukturell: Grammatik, Orthografie, Zeichensetzung, Wortschatz, Satzbau.
+- textsorte: Merkmale eines Arztbriefs (Regeln 1, 2, 5, 8): Briefform, Gliederung, ganze Sätze, Vollständigkeit aller Informationen aus Gespräch und Aufgabenblatt.
+- pragmatik: Regeln 3, 4, 6: Distanz bei Patientenaussagen, Indikativ/Passiv bei eigenen Befunden, Fachsprache statt Umgangssprache, sachlicher Stil, Adressatenbezug.
+- strukturell: Grammatik, Orthografie, Zeichensetzung, Wortschatz, Satzbau, Textverknüpfung (Regel 7).
 - global: Gesamteindruck im Sinne von C1: klar, strukturiert, präzise, keine Missverständnisse.
 
-Prüfe besonders: Wurden Fakten falsch übernommen (z. B. Zahn, Dosierung, Allergie)? Das ist ein schwerwiegender Fehler.
+Sei realistisch und streng wie in der echten Prüfung. Vergleiche Inhalt und Formulierungen mit der Musterlösung, akzeptiere aber jede sprachlich und fachlich korrekte Alternative.
+Obergrenzen: Fehlt eine Allergie oder wurde eine Dosierung, ein Medikament, ein Zahn oder eine Seite falsch übernommen, ist textsorte höchstens 45. Stehen Befunde oder Therapie als Stichpunkte, ist textsorte höchstens 50. Werden Patientenaussagen überwiegend im Indikativ wiedergegeben, ist pragmatik höchstens 50. Ein Brief, bei dem weniger als 60 % der Checkliste erfüllt sind, ist insgesamt nicht bestanden (global unter 60).
 
 ## Checkliste der Vollständigkeit
 Markiere jeden Punkt als "erfuellt", "teilweise" oder "fehlt" und gib die id exakt so zurück; "beleg" ist ein kurzes Zitat aus dem Brief:

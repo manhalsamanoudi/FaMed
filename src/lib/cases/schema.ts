@@ -123,9 +123,23 @@ export const caseSchema = z.object({
   arztbrief: z
     .object({
       audioSrc: z.string().startsWith("/"),
-      /** Gesprächsskript (Grundlage für Audio und Bewertung) */
-      dialog: z.array(z.object({ sprecher: z.enum(["Zahnarzt", "Patient"]), text: z.string().min(1) })).min(4),
+      /**
+       * Gesprächsskript (Grundlage für Audio und Bewertung). Geräusche in eckigen Klammern
+       * („[seufzt]“) setzt die Sprachausgabe als Geräusch um; „stil“ ist eine Regieanweisung für diese Zeile.
+       */
+      dialog: z
+        .array(
+          z.object({
+            sprecher: z.enum(["Zahnarzt", "Patient"]),
+            text: z.string().min(1),
+            stil: z.string().min(1).optional(),
+          }),
+        )
+        .min(4),
+      /** Stimmen (Gemini-TTS) */
       sprecher: z.object({ Zahnarzt: z.string().min(1), Patient: z.string().min(1) }),
+      /** Grundcharakter der Sprecher für die Sprachausgabe */
+      sprechweise: z.object({ Zahnarzt: z.string().min(1), Patient: z.string().min(1) }).optional(),
       musterbrief: z.string().min(1),
     })
     .optional(),

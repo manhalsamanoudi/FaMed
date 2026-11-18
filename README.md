@@ -13,12 +13,13 @@ Planung und Hintergründe: [docs/PLANUNG.md](docs/PLANUNG.md)
 | 1 | Anamnesegespräch (inkl. Röntgenbefund erklären) | Zahnarzt-Patienten-Kommunikation | 11 Min. | 2 |
 | 2 | Aufklärungsgespräch | Zahnarzt-Patienten-Kommunikation | 11 Min. | 7 (aus eigenen Unterlagen) |
 | 3 | Patientenvorstellung | Zahnarzt-Zahnarzt-Kommunikation | 11 Min. | 2 |
-| 4 | Arztbrief (Gespräch anhören, Brief schreiben) | Schriftliche Station | 22 Min. | 1 |
+| 4 | Arztbrief (Gespräch anhören, Brief schreiben) | Schriftliche Station | 22 Min. | 4 (3 nach den FaMed-Arztbriefvideos) |
 
 - Fälle: `src/content/cases/` (je Station eine Datei, Aufgabenblatt wie im Übungstest, verdeckte Rollenkarte, Bewertungs-Checkliste, Beispielformulierungen)
 - Gespräche: **Gemini Live API** (Audio rein/raus, Live-Transkript)
 - Auswertung: **Gemini Flash** mit Ausweichkette – Punkte je Kriteriencluster, Checkliste, Fehlerliste, Laiensprache-Check, Beispielformulierungen bzw. Musterbrief
-- Arztbrief-Audio: einmalig mit Gemini TTS erzeugt (`npm run audio:arztbrief`), liegt in `public/audio/`
+- Arztbrief-Audio: einmalig mit Gemini TTS erzeugt (`npm run audio:arztbrief`, einzelner Fall: `-- --nur=<fall-id>`), liegt in `public/audio/`. Natürliche Sprechweise über `sprechweise` je Sprecher, `stil` je Zeile und Geräusche wie `[seufzt]` im Text.
+- Arztbrief-Korrektur: Aufbau und Regeln nach dem FaMed-Musterbrief (Konjunktiv I für Patientenaussagen, Indikativ/Passiv für eigene Befunde, ganze Sätze, Fachsprache)
 
 Alles läuft über die **kostenlose** Gemini-API-Stufe.
 
