@@ -12,8 +12,25 @@ type SessionInfo =
 
 const CHECK_INTERVAL_MS = 60_000;
 
+export function Brand() {
+  return (
+    <Link href="/" className="group flex items-center gap-2.5" aria-label="FaMed Zahnmedizin – Startseite">
+      <span
+        aria-hidden
+        className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent text-sm font-bold text-accent-foreground"
+      >
+        Z
+      </span>
+      <span className="leading-tight">
+        <span className="block text-[15px] font-semibold tracking-tight">FaMed Zahnmedizin</span>
+        <span className="block text-xs text-muted">Prüfungstraining</span>
+      </span>
+    </Link>
+  );
+}
+
 /**
- * Kopfzeile mit Anmeldestatus. Prüft regelmäßig, ob die Sitzung noch gilt –
+ * Kopfzeile mit Marke und Anmeldestatus. Prüft regelmäßig, ob die Sitzung noch gilt –
  * so wird ein Gerät auch ohne Klick abgemeldet, wenn der Code woanders benutzt wurde.
  */
 export function SessionBar() {
@@ -65,39 +82,36 @@ export function SessionBar() {
     goToLogin("abgemeldet");
   }
 
-  if (onLoginPage || !info || info.rolle === "offen") return null;
+  const showSession = !onLoginPage && info && info.rolle !== "offen";
 
   return (
-    <div className="border-b border-border bg-card">
-      <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-2 px-4 py-2 text-sm">
-        <span className="text-muted">
-          {info.rolle === "master" ? (
-            <>
-              Angemeldet mit <strong className="text-foreground">Master-Code</strong>
-            </>
-          ) : (
-            <>
-              Angemeldet als <strong className="text-foreground">{info.name}</strong> · gültig bis{" "}
-              {formatDateTime(info.ablauf)}
-            </>
-          )}
-        </span>
-        <span className="flex items-center gap-4">
-          {info.rolle === "master" && (
-            <>
-              <Link href="/" className="hover:text-accent">
-                Training
-              </Link>
+    <header className="border-b border-border bg-card/80 backdrop-blur supports-[backdrop-filter]:bg-card/70">
+      <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3">
+        <Brand />
+        {showSession && (
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
+            <span className="text-muted">
+              {info.rolle === "master" ? (
+                <>
+                  Angemeldet mit <strong className="text-foreground">Master-Code</strong>
+                </>
+              ) : (
+                <>
+                  <strong className="text-foreground">{info.name}</strong> · gültig bis {formatDateTime(info.ablauf)}
+                </>
+              )}
+            </span>
+            {info.rolle === "master" && (
               <Link href="/admin" className="font-medium text-accent hover:underline">
                 Verwaltung
               </Link>
-            </>
-          )}
-          <button type="button" onClick={() => void logout()} className="text-muted hover:text-foreground">
-            Abmelden
-          </button>
-        </span>
+            )}
+            <button type="button" onClick={() => void logout()} className="text-muted hover:text-foreground">
+              Abmelden
+            </button>
+          </div>
+        )}
       </div>
-    </div>
+    </header>
   );
 }

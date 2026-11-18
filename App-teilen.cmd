@@ -10,10 +10,10 @@ if errorlevel 1 (
   pause
   exit /b 1
 )
-start "DentSim Server (offen lassen)" /min cmd /c "npm run start -- -p 3001"
+start "FaMed Zahnmedizin Server (offen lassen)" /min cmd /c "npm run start -- -p 3001"
 timeout /t 5 /nobreak >nul
 echo.
 echo Starte Tunnel ... Der Link steht gleich im Kasten (https://....trycloudflare.com)
-echo Zugangscode: siehe ACCESS_CODE in .env.local
+echo Zugang: Master-Code (MASTER_CODE in .env.local) oder persoenliche Codes aus der Verwaltung
 echo.
 "C:\Program Files (x86)\cloudflared\cloudflared.exe" tunnel --no-autoupdate --url http://localhost:3001

@@ -1,6 +1,6 @@
 import { AdminPanel } from "@/components/admin-panel";
 
-export const metadata = { title: "Verwaltung – DentSim FSP" };
+export const metadata = { title: "Verwaltung" };
 
 export default function AdminPage() {
   return (

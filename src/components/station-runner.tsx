@@ -3,9 +3,10 @@
 import Link from "next/link";
 import { useState } from "react";
 import { handleUnauthorized } from "@/lib/access/client-events";
-import { STATION_LABELS, type PublicCase } from "@/lib/cases/schema";
+import { STATIONS, type PublicCase } from "@/lib/cases/schema";
+import { CaseSheet } from "./case-sheet";
 import type { EvaluateResponse } from "@/lib/evaluation/schema";
-import { formatTranscript, median } from "@/lib/live/transcript";
+import { formatTranscript } from "@/lib/live/transcript";
 import { useLiveConversation } from "@/lib/live/use-live-conversation";
 import { EvaluationReport } from "./evaluation-report";
 
@@ -35,9 +36,10 @@ export function StationRunner({ caseData }: { caseData: PublicCase }) {
   >({ kind: "none" });
 
   const isRunning = conv.status === "live" || conv.status === "reconnecting";
-  const sheet = caseData.candidateSheet;
-  const partnerLabel = caseData.actorCard.role === "patient" ? "Patient:in" : "Kolleg:in";
-  const medianLatency = median(conv.latencies);
+  const sheet = caseData.sheet;
+  const station = STATIONS[caseData.stationType];
+  const partnerLabel = caseData.rolle === "kollege" ? "Kolleg:in" : "Patient:in";
+  const partnerInitial = sheet.gespraechspartner.replace(/^(Herr|Frau|Dr\.)\s+/g, "").replace(/^[A-Z]\.\s*/, "").charAt(0);
 
   async function evaluate() {
     const audio = conv.getRecording();
@@ -71,12 +73,13 @@ export function StationRunner({ caseData }: { caseData: PublicCase }) {
     <main className="mx-auto w-full max-w-6xl px-4 py-6">
       <header className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <Link href="/" className="text-sm text-muted hover:text-foreground">
-            ← Übersicht
+          <Link href={`/station/${caseData.stationType}`} className="text-sm text-muted hover:text-foreground">
+            ← {station.label}: alle Themen
           </Link>
-          <h1 className="text-xl font-semibold">
-            {STATION_LABELS[caseData.stationType]}: {caseData.title}
-          </h1>
+          <p className="mt-2 text-xs font-medium uppercase tracking-wider text-accent">
+            {station.nr} · {station.label} · {station.bereich}
+          </p>
+          <h1 className="text-xl font-semibold sm:text-2xl">{caseData.title}</h1>
         </div>
         <div
           className={`rounded-lg border px-4 py-2 font-mono text-2xl tabular-nums ${
@@ -90,35 +93,18 @@ export function StationRunner({ caseData }: { caseData: PublicCase }) {
         </div>
       </header>
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-[1.1fr_1fr]">
+      <div className="mt-6 grid items-start gap-6 lg:grid-cols-[1.25fr_1fr]">
         {/* Aufgabenblatt */}
-        <section className="rounded-xl border border-border bg-card p-5">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-muted">
-            Aufgabenblatt
+        <section className="rounded-2xl border border-border bg-card p-5 sm:p-6">
+          <h2 className="mb-4 flex items-center justify-between text-sm font-semibold">
+            <span>Aufgabenblatt</span>
+            <span className="rounded-full bg-border/60 px-2.5 py-0.5 text-xs font-medium">{station.label}</span>
           </h2>
-          <p className="mt-3">{sheet.kurzbeschreibung}</p>
-          <dl className="mt-4 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">
-            {sheet.patientInfo.map((p) => (
-              <div key={p.label} className="contents">
-                <dt className="text-muted">{p.label}</dt>
-                <dd>{p.value}</dd>
-              </div>
-            ))}
-          </dl>
-          <h3 className="mt-5 font-medium">Aufgabe</h3>
-          <ul className="mt-2 list-disc space-y-1 pl-5">
-            {sheet.aufgaben.map((a) => (
-              <li key={a}>{a}</li>
-            ))}
-          </ul>
-          <p className="mt-5 text-sm text-muted">
-            Sie haben für die gesamte Situation maximal{" "}
-            {Math.round(caseData.durationSeconds / 60)} Minuten Zeit.
-          </p>
+          <CaseSheet sheet={sheet} />
         </section>
 
         {/* Gesprächspartner */}
-        <section className="flex flex-col rounded-xl border border-border bg-card p-5">
+        <section className="flex flex-col rounded-2xl border border-border bg-card p-5 lg:sticky lg:top-4">
           <div className="flex items-center gap-4">
             <div
               className={`flex h-16 w-16 shrink-0 items-center justify-center rounded-full text-2xl font-semibold transition ${
@@ -128,10 +114,10 @@ export function StationRunner({ caseData }: { caseData: PublicCase }) {
               }`}
               aria-hidden
             >
-              {caseData.actorCard.name.charAt(0)}
+              {partnerInitial}
             </div>
             <div>
-              <p className="font-medium">{sheet.gesprächspartner}</p>
+              <p className="font-medium">{sheet.gespraechspartner}</p>
               <p className="text-sm text-muted" role="status">
                 {conv.actorSpeaking ? `${partnerLabel} spricht …` : STATUS_TEXT[conv.status]}
               </p>
@@ -182,9 +168,12 @@ export function StationRunner({ caseData }: { caseData: PublicCase }) {
           </div>
 
           {conv.status === "idle" && (
-            <p className="mt-4 text-sm text-muted">
-              Tipp: Kopfhörer verwenden. Beginnen Sie das Gespräch selbst, z. B. mit Begrüßung und
-              Vorstellung.
+            <p className="mt-4 text-sm leading-relaxed text-muted">
+              Lesen Sie zuerst das Aufgabenblatt. Die {Math.round(caseData.durationSeconds / 60)} Minuten laufen ab
+              Gesprächsstart. Setzen Sie Kopfhörer auf und beginnen Sie das Gespräch selbst
+              {caseData.rolle === "kollege"
+                ? " – z. B. „Guten Tag, Frau Dr. …, ich möchte Ihnen kurz einen Patienten vorstellen.“"
+                : " – z. B. mit Begrüßung und Vorstellung."}
             </p>
           )}
           {conv.error && (
@@ -193,13 +182,7 @@ export function StationRunner({ caseData }: { caseData: PublicCase }) {
             </p>
           )}
 
-          <div className="mt-5 text-xs text-muted">
-            Antwortzeit (Median):{" "}
-            {medianLatency === null ? "–" : `${(medianLatency / 1000).toFixed(2)} s`} ·
-            Messungen: {conv.latencies.length}
-          </div>
-
-          <div className="mt-4 flex items-center justify-between">
+          <div className="mt-6 flex items-center justify-between border-t border-border pt-4">
             <h2 className="text-sm font-semibold uppercase tracking-wide text-muted">
               Live-Transkript
             </h2>

@@ -12,7 +12,14 @@ const STATUS_CLASS = {
   fehlt: "text-danger",
 } as const;
 
-export function EvaluationReport({ result }: { result: EvaluateResponse }) {
+export function EvaluationReport({
+  result,
+  schriftlich = false,
+}: {
+  result: EvaluateResponse;
+  /** Arztbrief: kein Transkript/keine Aussprache, dafür Musterbrief */
+  schriftlich?: boolean;
+}) {
   const e = result.evaluation;
   const passed = result.overall >= PASS_THRESHOLD;
 
@@ -85,7 +92,7 @@ export function EvaluationReport({ result }: { result: EvaluateResponse }) {
             </div>
           )}
           <div className="rounded-xl border border-border bg-card p-5">
-            <h3 className="font-semibold">Flüssigkeit</h3>
+            <h3 className="font-semibold">{schriftlich ? "Lesefluss und Struktur" : "Flüssigkeit"}</h3>
             <p className="mt-2 text-sm">{e.fluessigkeit}</p>
             {e.ausspracheHinweise.length > 0 && (
               <>
@@ -110,7 +117,7 @@ export function EvaluationReport({ result }: { result: EvaluateResponse }) {
             <table className="w-full text-left text-sm">
               <thead className="text-muted">
                 <tr>
-                  <th className="py-2 pr-4 font-medium">Gesagt</th>
+                  <th className="py-2 pr-4 font-medium">{schriftlich ? "Geschrieben" : "Gesagt"}</th>
                   <th className="py-2 pr-4 font-medium">Besser</th>
                   <th className="py-2 font-medium">Warum</th>
                 </tr>
@@ -131,10 +138,40 @@ export function EvaluationReport({ result }: { result: EvaluateResponse }) {
         </div>
       )}
 
-      <details className="rounded-xl border border-border bg-card p-5">
-        <summary className="cursor-pointer font-semibold">Wortgetreues Transkript (Ihre Äußerungen)</summary>
-        <p className="mt-3 whitespace-pre-wrap text-sm">{e.wortgetreuesTranskript}</p>
-      </details>
+      {result.beispiele.length > 0 && (
+        <div className="rounded-xl border border-accent/40 bg-card p-5">
+          <h3 className="font-semibold">Beispielformulierungen</h3>
+          <p className="mt-1 text-sm text-muted">So könnte man es sagen – zum Vergleich mit Ihren eigenen Formulierungen.</p>
+          <div className="mt-4 grid gap-5 md:grid-cols-2">
+            {result.beispiele.map((b) => (
+              <div key={b.zu}>
+                <h4 className="text-sm font-semibold text-accent">{b.zu}</h4>
+                <ul className="mt-2 space-y-1.5 text-sm leading-relaxed">
+                  {b.saetze.map((s) => (
+                    <li key={s} className="border-l-2 border-border pl-3">
+                      {s}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {result.musterbrief && (
+        <details className="rounded-xl border border-accent/40 bg-card p-5" open>
+          <summary className="cursor-pointer font-semibold">Musterbrief zum Vergleich</summary>
+          <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed">{result.musterbrief}</p>
+        </details>
+      )}
+
+      {!schriftlich && (
+        <details className="rounded-xl border border-border bg-card p-5">
+          <summary className="cursor-pointer font-semibold">Wortgetreues Transkript (Ihre Äußerungen)</summary>
+          <p className="mt-3 whitespace-pre-wrap text-sm">{e.wortgetreuesTranskript}</p>
+        </details>
+      )}
 
       <p className="text-xs text-muted">
         Bewertet von {result.model}. Schätzung ohne Gewähr – keine Prognose für die echte Prüfung.

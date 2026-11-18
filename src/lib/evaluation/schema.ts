@@ -40,7 +40,7 @@ export const evaluationSchema = z.object({
       z.object({
         zitat: z.string().describe("fehlerhafte Äußerung im Wortlaut"),
         korrektur: z.string().describe("korrekte Formulierung"),
-        kategorie: z.enum(["Grammatik", "Wortschatz", "Satzbau", "Aussprache", "Register"]),
+        kategorie: z.enum(["Grammatik", "Wortschatz", "Satzbau", "Aussprache", "Register", "Orthografie"]),
         erklaerung: z.string().describe("kurze, verständliche Erklärung"),
       }),
     )
@@ -67,6 +67,10 @@ export type EvaluateResponse = {
   coverage: number;
   checklistLabels: Record<string, string>;
   model: string;
+  /** Beispielformulierungen aus dem Fall (erst nach der Auswertung sichtbar) */
+  beispiele: { zu: string; saetze: string[] }[];
+  /** Nur Arztbrief */
+  musterbrief?: string;
 };
 
 export function overallScore(e: Evaluation): number {

@@ -11,7 +11,7 @@ export function buildShareMessage(input: {
   const greeting = input.name ? `Hallo ${input.name}!` : "Hallo!";
   const what = input.art === "test" ? "dein Testzugang" : "dein Zugang";
   return [
-    `${greeting} Hier ist ${what} zum Prüfungstraining FaMed Zahnmedizin (DentSim FSP):`,
+    `${greeting} Hier ist ${what} zum Prüfungstraining FaMed Zahnmedizin:`,
     "",
     `🔗 ${input.url}`,
     `🔑 Code: ${input.code}`,

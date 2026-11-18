@@ -1,17 +1,24 @@
-# DentSim FSP – Prüfungstraining Fachsprache Zahnmedizin
+# FaMed Zahnmedizin – Prüfungstraining
 
-Web-App zur Vorbereitung auf die Fachsprachenprüfung Zahnmedizin (FaMed-Format): Gespräche per Mikrofon mit KI-Patient:innen, echtes Prüfungstiming, Auswertung nach den Bewertungskriterien.
+Web-App zur Vorbereitung auf die FaMed Zahnmedizin (Fachsprachenprüfung): alle vier Prüfungssituationen wie im offiziellen Übungstest, Gespräche per Mikrofon mit KI-Gesprächspartnern, echtes Prüfungstiming, Auswertung nach den Bewertungskriterien.
 
-> Unabhängiges Trainingsangebot, nicht verbunden mit FaMed / digiFORT.
+> Unabhängiges Trainingsangebot, nicht verbunden mit digiFORT.
 
 Planung und Hintergründe: [docs/PLANUNG.md](docs/PLANUNG.md)
 
-## Stand: Phase 0 (Technik-Spike)
+## Inhalte
 
-- Stationstraining „Anamnesegespräch“ mit einem eigenen Fall (Perikoronitis 38)
-- Live-Sprachgespräch mit KI-Patient über die **Gemini Live API** (Audio rein/raus, Live-Transkript, Unterbrechen möglich)
-- 11-Minuten-Timer, Messung der Antwortzeit
-- Auswertung der eigenen Aufnahme mit **Gemini Flash**: Punkte je Kriteriencluster, Checkliste, Fehlerliste, nicht erklärte Fachbegriffe, Aussprache, Flüssigkeit
+| Nr. | Situation | Bereich | Zeit | Fälle |
+|---|---|---|---|---|
+| 1 | Anamnesegespräch (inkl. Röntgenbefund erklären) | Zahnarzt-Patienten-Kommunikation | 11 Min. | 2 |
+| 2 | Aufklärungsgespräch | Zahnarzt-Patienten-Kommunikation | 11 Min. | 7 (aus eigenen Unterlagen) |
+| 3 | Patientenvorstellung | Zahnarzt-Zahnarzt-Kommunikation | 11 Min. | 2 |
+| 4 | Arztbrief (Gespräch anhören, Brief schreiben) | Schriftliche Station | 22 Min. | 1 |
+
+- Fälle: `src/content/cases/` (je Station eine Datei, Aufgabenblatt wie im Übungstest, verdeckte Rollenkarte, Bewertungs-Checkliste, Beispielformulierungen)
+- Gespräche: **Gemini Live API** (Audio rein/raus, Live-Transkript)
+- Auswertung: **Gemini Flash** mit Ausweichkette – Punkte je Kriteriencluster, Checkliste, Fehlerliste, Laiensprache-Check, Beispielformulierungen bzw. Musterbrief
+- Arztbrief-Audio: einmalig mit Gemini TTS erzeugt (`npm run audio:arztbrief`), liegt in `public/audio/`
 
 Alles läuft über die **kostenlose** Gemini-API-Stufe.
 

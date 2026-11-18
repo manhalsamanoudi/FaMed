@@ -1,34 +1,16 @@
-import {
-  FileState,
-  createPartFromUri,
-  type GenerateContentResponse,
-  type GoogleGenAI,
-} from "@google/genai";
-import { z } from "zod";
+import { FileState, createPartFromUri, type GoogleGenAI } from "@google/genai";
 import { getCase } from "@/content/cases";
 import { requireAccess } from "@/lib/access/session";
 import { buildEvaluationPrompt } from "@/lib/evaluation/prompt";
-import {
-  checklistCoverage,
-  evaluationSchema,
-  overallScore,
-} from "@/lib/evaluation/schema";
-import {
-  AllModelsBusyError,
-  createServerClient,
-  errorResponse,
-  getServerEnv,
-  isRetryableModelError,
-} from "@/lib/server/env";
+import { InvalidEvaluationError, runEvaluation } from "@/lib/evaluation/run";
+import { createServerClient, errorResponse, getServerEnv } from "@/lib/server/env";
 
 /** Bewertung kann bei 11 Minuten Audio etwas dauern; dazu ggf. Ausweichmodelle. */
 export const maxDuration = 300;
 
-/** Höchstwartezeit pro Modell, bevor auf das nächste ausgewichen wird. */
-const MODEL_TIMEOUT_MS = 90_000;
-
 const MAX_AUDIO_BYTES = 40 * 1024 * 1024;
 
+/** Bewertung eines mündlichen Gesprächs (Aufnahme + Live-Transkript). */
 export async function POST(request: Request) {
   // Vor dem Lesen des (großen) Bodys prüfen.
   const denied = await requireAccess(request);
@@ -46,7 +28,7 @@ export async function POST(request: Request) {
     return Response.json({ error: "Audiodatei leer oder zu groß." }, { status: 400 });
   }
   const c = getCase(caseId);
-  if (!c) {
+  if (!c || !c.actorCard) {
     return Response.json({ error: "Fall nicht gefunden." }, { status: 404 });
   }
 
@@ -66,54 +48,15 @@ export async function POST(request: Request) {
       throw new Error(`Audio-Upload nicht verarbeitet (Status ${file.state}).`);
     }
 
-    const contents = [
+    const result = await runEvaluation(ai, env.evalModels, c, [
       createPartFromUri(file.uri, "audio/wav"),
       buildEvaluationPrompt(c, typeof transcript === "string" ? transcript : ""),
-    ];
-    const jsonSchema = z.toJSONSchema(evaluationSchema);
-
-    // Ausweichkette: bei Überlastung des besten Modells das nächste versuchen.
-    let response: GenerateContentResponse | null = null;
-    let usedModel = "";
-    for (const model of env.evalModels) {
-      try {
-        response = await ai.models.generateContent({
-          model,
-          contents,
-          config: {
-            responseMimeType: "application/json",
-            responseJsonSchema: jsonSchema,
-            temperature: 0.2,
-            httpOptions: { timeout: MODEL_TIMEOUT_MS },
-          },
-        });
-        usedModel = model;
-        break;
-      } catch (err) {
-        if (!isRetryableModelError(err)) throw err;
-        console.warn(`Bewertungsmodell ${model} nicht verfügbar, versuche nächstes.`, err);
-      }
-    }
-    if (!response) throw new AllModelsBusyError(env.evalModels);
-
-    const parsed = evaluationSchema.safeParse(JSON.parse(response.text ?? "null"));
-    if (!parsed.success) {
-      console.error("Ungültige Bewertung von Gemini", parsed.error, response.text);
-      return Response.json(
-        { error: "Die Bewertung hatte ein unerwartetes Format. Bitte erneut versuchen." },
-        { status: 502 },
-      );
-    }
-
-    const weights = Object.fromEntries(c.rubric.checklist.map((i) => [i.id, i.weight]));
-    return Response.json({
-      evaluation: parsed.data,
-      overall: overallScore(parsed.data),
-      coverage: checklistCoverage(parsed.data, weights),
-      checklistLabels: Object.fromEntries(c.rubric.checklist.map((i) => [i.id, i.label])),
-      model: usedModel,
-    });
+    ]);
+    return Response.json(result);
   } catch (err) {
+    if (err instanceof InvalidEvaluationError) {
+      return Response.json({ error: err.message }, { status: 502 });
+    }
     return errorResponse(err);
   } finally {
     // Aufnahme nicht länger als nötig bei Google liegen lassen.

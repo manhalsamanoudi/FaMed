@@ -26,9 +26,10 @@ export async function POST(request: Request) {
     return Response.json({ error: "caseId fehlt." }, { status: 400 });
   }
   const c = getCase(parsed.data.caseId);
-  if (!c) {
+  if (!c || !c.actorCard) {
     return Response.json({ error: "Fall nicht gefunden." }, { status: 404 });
   }
+  const actor = c.actorCard;
 
   try {
     const env = getServerEnv();
@@ -38,7 +39,7 @@ export async function POST(request: Request) {
       responseModalities: [Modality.AUDIO],
       systemInstruction: buildActorInstruction(c),
       speechConfig: {
-        voiceConfig: { prebuiltVoiceConfig: { voiceName: c.actorCard.voice } },
+        voiceConfig: { prebuiltVoiceConfig: { voiceName: actor.voice } },
       },
       inputAudioTranscription: { customVocabulary: c.vocabulary },
       outputAudioTranscription: {},

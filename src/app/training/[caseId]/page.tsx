@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { getCase, listCases } from "@/content/cases";
 import { toPublicCase } from "@/lib/cases/schema";
+import { LetterRunner } from "@/components/letter-runner";
 import { StationRunner } from "@/components/station-runner";
 
 /** Alle Fälle sind zur Build-Zeit bekannt → Seiten werden statisch vorgerendert. */
@@ -22,6 +23,7 @@ export default function TrainingPage({ params }: PageProps<"/training/[caseId]">
 function CaseStation({ caseId }: { caseId: string }) {
   const c = getCase(caseId);
   if (!c) notFound();
-  // Nur der öffentliche Teil (ohne Rollenkarte/Rubrik) geht an den Browser.
-  return <StationRunner caseData={toPublicCase(c)} />;
+  // Nur der öffentliche Teil (ohne Rollenkarte, Rubrik, Beispiele, Skript) geht an den Browser.
+  const data = toPublicCase(c);
+  return c.stationType === "arztbrief" ? <LetterRunner caseData={data} /> : <StationRunner caseData={data} />;
 }
