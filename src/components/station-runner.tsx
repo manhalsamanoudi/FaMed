@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { handleUnauthorized } from "@/lib/access/client-events";
 import { STATION_LABELS, type PublicCase } from "@/lib/cases/schema";
 import type { EvaluateResponse } from "@/lib/evaluation/schema";
 import { formatTranscript, median } from "@/lib/live/transcript";
@@ -54,6 +55,7 @@ export function StationRunner({ caseData }: { caseData: PublicCase }) {
     );
     try {
       const res = await fetch("/api/evaluate", { method: "POST", body: form });
+      if (await handleUnauthorized(res)) return;
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? `Fehler ${res.status}`);
       setEvalState({ kind: "done", result: data as EvaluateResponse });

@@ -1,7 +1,7 @@
 import { EndSensitivity, Modality, type LiveConnectConfig } from "@google/genai";
 import { z } from "zod";
 import { getCase } from "@/content/cases";
-import { requireAccess } from "@/lib/access";
+import { requireAccess } from "@/lib/access/session";
 import { buildActorInstruction } from "@/lib/live/actor-prompt";
 import { createServerClient, errorResponse, getServerEnv } from "@/lib/server/env";
 

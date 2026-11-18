@@ -81,6 +81,9 @@ export function errorResponse(err: unknown): Response {
       { status: 500 },
     );
   }
+  if (err instanceof Error && err.name === "DatabaseNotConfiguredError") {
+    return Response.json({ error: err.message }, { status: 500 });
+  }
   if (err instanceof AllModelsBusyError) {
     return Response.json({ error: err.message }, { status: 503 });
   }

@@ -4,6 +4,7 @@ import { GoogleGenAI, Modality, type LiveServerMessage, type Session } from "@go
 import { useCallback, useEffect, useRef, useState } from "react";
 import { MicCapture, PcmPlayer } from "@/lib/audio/browser-audio";
 import { INPUT_SAMPLE_RATE, base64ToInt16, encodeWav, int16ToBase64 } from "@/lib/audio/pcm";
+import { handleUnauthorized } from "@/lib/access/client-events";
 import { appendTranscript, type Turn } from "./transcript";
 
 export type ConversationStatus = "idle" | "connecting" | "live" | "reconnecting" | "ended" | "error";
@@ -160,6 +161,7 @@ export function useLiveConversation(caseId: string, durationSeconds: number) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ caseId, resumeHandle }),
       });
+      if (await handleUnauthorized(res)) throw new Error("Du wurdest abgemeldet.");
       const data = (await res.json().catch(() => ({}))) as {
         token?: string;
         model?: string;

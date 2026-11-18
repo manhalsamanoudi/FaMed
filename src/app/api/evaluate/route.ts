@@ -6,7 +6,7 @@ import {
 } from "@google/genai";
 import { z } from "zod";
 import { getCase } from "@/content/cases";
-import { requireAccess } from "@/lib/access";
+import { requireAccess } from "@/lib/access/session";
 import { buildEvaluationPrompt } from "@/lib/evaluation/prompt";
 import {
   checklistCoverage,

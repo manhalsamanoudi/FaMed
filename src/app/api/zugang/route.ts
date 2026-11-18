@@ -1,39 +1,68 @@
 import { z } from "zod";
+import { loginWithCode, logoutSession } from "@/lib/access/store";
 import {
-  ACCESS_COOKIE,
-  ACCESS_MAX_AGE_SECONDS,
-  accessCode,
-  constantTimeEqual,
-  tokenForCode,
-} from "@/lib/access";
+  MASTER_COOKIE_MAX_AGE,
+  REASON_TEXT,
+  buildCookie,
+  clearCookie,
+  isMasterCode,
+  isOpenMode,
+  isSecureRequest,
+  masterCode,
+  masterCookieValue,
+  readAccessCookie,
+  userCookieValue,
+} from "@/lib/access/session";
+import { getDb, isDatabaseConfigured } from "@/lib/db/client";
+import { errorResponse } from "@/lib/server/env";
 
 const bodySchema = z.object({ code: z.string().max(200) });
 
+/** Anmeldung mit Master-Code oder persönlichem Code. */
 export async function POST(request: Request) {
-  const code = accessCode();
-  if (!code) return Response.json({ ok: true });
+  if (isOpenMode()) return Response.json({ ok: true, rolle: "offen" });
 
   const parsed = bodySchema.safeParse(await request.json().catch(() => null));
-  const given = parsed.success ? parsed.data.code.trim() : "";
+  const code = parsed.success ? parsed.data.code.trim() : "";
+  const secure = isSecureRequest(request);
 
-  if (!constantTimeEqual(given.toLowerCase(), code.toLowerCase())) {
-    // Bremst automatisches Durchprobieren.
-    await new Promise((res) => setTimeout(res, 800));
-    return Response.json({ error: "Der Code ist nicht richtig." }, { status: 401 });
+  if (code && isMasterCode(code)) {
+    const value = await masterCookieValue(masterCode()!);
+    return Response.json(
+      { ok: true, rolle: "master" },
+      { headers: { "Set-Cookie": buildCookie(value, MASTER_COOKIE_MAX_AGE, secure) } },
+    );
   }
 
-  const secure =
-    request.headers.get("x-forwarded-proto") === "https" || new URL(request.url).protocol === "https:";
-  const cookie = [
-    `${ACCESS_COOKIE}=${await tokenForCode(code)}`,
-    "Path=/",
-    "HttpOnly",
-    "SameSite=Lax",
-    `Max-Age=${ACCESS_MAX_AGE_SECONDS}`,
-    secure ? "Secure" : "",
-  ]
-    .filter(Boolean)
-    .join("; ");
+  try {
+    const result =
+      code && isDatabaseConfigured()
+        ? await loginWithCode(getDb(), code)
+        : ({ ok: false, reason: "unbekannt" } as const);
 
-  return Response.json({ ok: true }, { headers: { "Set-Cookie": cookie } });
+    if (!result.ok) {
+      // Bremst automatisches Durchprobieren.
+      await new Promise((res) => setTimeout(res, 800));
+      return Response.json({ error: REASON_TEXT[result.reason], grund: result.reason }, { status: 401 });
+    }
+
+    const { record, sessionToken } = result;
+    const maxAge = (record.expiresAt!.getTime() - Date.now()) / 1000;
+    return Response.json(
+      { ok: true, rolle: "nutzer", ablauf: record.expiresAt },
+      { headers: { "Set-Cookie": buildCookie(userCookieValue(record.id, sessionToken), maxAge, secure) } },
+    );
+  } catch (err) {
+    return errorResponse(err);
+  }
+}
+
+/** Abmelden auf diesem Gerät. */
+export async function DELETE(request: Request) {
+  const cookie = readAccessCookie(request);
+  const m = cookie && /^u\.([0-9a-f-]{36})\.(.+)$/i.exec(cookie);
+  if (m && isDatabaseConfigured()) {
+    await logoutSession(getDb(), m[1], m[2]).catch(() => undefined);
+  }
+  return Response.json({ ok: true }, { headers: { "Set-Cookie": clearCookie(isSecureRequest(request)) } });
 }
