@@ -104,6 +104,11 @@ export const caseSchema = z.object({
       /** Vorgefertigte Gemini-Stimme */
       voice: z.string().min(1),
       persona: z.string().min(1),
+      /**
+       * Wie die Figur klingt (Alter, Herkunft/Färbung, Stimmung, Eigenheiten, körperlicher Zustand).
+       * Sorgt zusammen mit den allgemeinen Sprechregeln für eine menschliche, nicht überdeutliche Stimme.
+       */
+      sprechweise: z.string().min(1),
       /** Fakten, die die Rolle kennt (Patient: nur auf Nachfrage preisgeben) */
       facts: z.array(z.string().min(1)),
       /** Rückfragen, die im Gespräch gestellt werden sollen */

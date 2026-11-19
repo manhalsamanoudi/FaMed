@@ -51,7 +51,9 @@ export const implantation36 = aufklaerungsFall({
   actor: {
     role: "patient",
     name: "Yusuf Yilmaz",
-    voice: "Orus",
+    voice: "Alnilam",
+    sprechweise:
+      "Mann, 58, Busfahrer aus Duisburg, in Deutschland aufgewachsen, ganz leichter türkischer Einschlag. Ruhig und bedächtig, tiefe, etwas raue Stimme; brummt „hm“ und „ja, ja“, wenn er zuhört; skeptisch („Na, ich weiß nich …“), lässt sich aber überzeugen.",
     persona: `58 Jahre, Busfahrer. Ruhig, aber etwas skeptisch gegenüber Operationen. Er möchte vor allem wissen, ob das Implantat lange hält. ${PATIENT_REGELN_AUFKLAERUNG}`,
     facts: [
       "Der Zahn unten links musste vor einem halben Jahr gezogen werden, seitdem ist dort eine Lücke.",
@@ -151,7 +153,9 @@ export const parodontitisAit = aufklaerungsFall({
   actor: {
     role: "patient",
     name: "Karin Neumann",
-    voice: "Kore",
+    voice: "Vindemiatrix",
+    sprechweise:
+      "Frau, 55, Bürokauffrau aus Stuttgart, leichte schwäbische Färbung („gell“, „a bissle“). Freundlich, aber besorgt; redet schneller, wenn sie nervös ist, und wird leise und verlegen, wenn es um ihr Zahnfleischbluten geht.",
     persona: `55 Jahre, Bürokauffrau. Freundlich, aber besorgt, ob sie ihre Zähne verlieren wird. Sie schämt sich ein bisschen für ihr Zahnfleischbluten. ${PATIENT_REGELN_AUFKLAERUNG}`,
     facts: [
       "Ihr Zahnfleisch blutet seit Monaten beim Zähneputzen, manche Zähne fühlen sich etwas locker an.",
@@ -249,7 +253,9 @@ export const wsr24 = aufklaerungsFall({
   actor: {
     role: "patient",
     name: "Stefan Wagner",
-    voice: "Charon",
+    voice: "Achird",
+    sprechweise:
+      "Mann, 42, Lehrer, eigentlich gut artikuliert, aber heute genervt und enttäuscht: seufzt, spricht etwas abgehackt, macht Denkpausen („Hm. Na gut.“), fragt genau nach und lässt sich nicht mit allgemeinen Antworten abspeisen.",
     persona: `42 Jahre, Lehrer. Ist enttäuscht, weil der Zahn schon eine Wurzelbehandlung hatte und trotzdem wieder Probleme macht. Sachlich, fragt genau nach. ${PATIENT_REGELN_AUFKLAERUNG}`,
     facts: [
       "Der Zahn oben links wurde vor einem Jahr wurzelbehandelt, jetzt drückt es wieder und manchmal schmeckt es komisch.",
@@ -353,7 +359,9 @@ export const krone46 = aufklaerungsFall({
   actor: {
     role: "patient",
     name: "Monika Fischer",
-    voice: "Aoede",
+    voice: "Pulcherrima",
+    sprechweise:
+      "Frau, 49, Friseurin aus Berlin, gesprächig und ungeduldig: redet schnell, springt im Satz, leicht berlinerisch („nee“, „wat“, „icke“ nur gelegentlich). Lacht nervös, sobald es ums Bohren geht, und unterbricht sich selbst.",
     persona: `49 Jahre, Friseurin. Gesprächig und etwas ungeduldig, fragt nach Aussehen und Kosten-Nebensachen nur kurz. Hat Angst vor dem Bohren. ${PATIENT_REGELN_AUFKLAERUNG}`,
     facts: [
       "Beim Essen ist vor zwei Wochen ein Stück vom Zahn unten rechts abgebrochen, der Zahn hat schon eine große Füllung.",
@@ -450,7 +458,9 @@ export const abszess36 = aufklaerungsFall({
   actor: {
     role: "patient",
     name: "Marianne Müller",
-    voice: "Leda",
+    voice: "Sulafat",
+    sprechweise:
+      "Ältere Frau, 67, Rentnerin aus Bayern, leichte bayerische Färbung („mei“, „gell“). Etwas brüchige, zittrige Stimme, spricht langsamer; ängstlich und aufgeregt. Die Wange ist dick und tut weh – sie spricht gepresst und undeutlich und seufzt oft.",
     persona: `67 Jahre, Rentnerin. Hat starke Schmerzen und eine dicke Wange, ist ängstlich und etwas aufgeregt, weil heute schon operiert werden soll. ${PATIENT_REGELN_AUFKLAERUNG}`,
     facts: [
       "Seit drei Tagen hat sie Schmerzen unten links, seit gestern ist die Wange dick.",
@@ -549,7 +559,9 @@ export const abszessExtraktion46 = aufklaerungsFall({
   actor: {
     role: "patient",
     name: "Thomas Schneider",
-    voice: "Algenib",
+    voice: "Enceladus",
+    sprechweise:
+      "Mann, 61, Hausmeister aus dem Ruhrgebiet, tiefe, raue Stimme, brummig und wortkarg („Tach“, „nee“, „wat muss, dat muss“). Die Wange ist geschwollen, deshalb nuschelt er; will, dass es schnell vorbei ist, und ist sauer, dass der Zahn raus muss.",
     persona: `61 Jahre, Hausmeister. Direkt und etwas brummig, hat Schmerzen und will, dass es schnell vorbei ist. Er ist enttäuscht, dass der Zahn raus muss. ${PATIENT_REGELN_AUFKLAERUNG}`,
     facts: [
       "Seit vier Tagen hat er Schmerzen unten rechts, seit gestern ist die Wange geschwollen.",
@@ -646,7 +658,9 @@ export const weisheitszaehne3848 = aufklaerungsFall({
   actor: {
     role: "patient",
     name: "Julia Hoffmann",
-    voice: "Zephyr",
+    voice: "Laomedeia",
+    sprechweise:
+      "Junge Frau, 31, Grafikdesignerin, sehr nervös: redet schnell, atmet hörbar, lacht nervös, stellt Fragen hastig hintereinander; jugendliche Umgangssprache („voll“, „krass“, „echt jetzt?“, „okay, okay“).",
     persona: `31 Jahre, Grafikdesignerin. Sehr nervös vor der Operation, hat im Internet Horrorgeschichten über Weisheitszähne gelesen. ${PATIENT_REGELN_AUFKLAERUNG}`,
     facts: [
       "Sie hatte in den letzten Monaten immer wieder Schmerzen und geschwollenes Zahnfleisch hinten unten auf beiden Seiten.",

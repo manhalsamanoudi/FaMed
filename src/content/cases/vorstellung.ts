@@ -104,7 +104,9 @@ export const dentitioDifficilis: CaseInput = {
   actorCard: {
     role: "kollege",
     name: "Dr. Sabine Lorenz",
-    voice: "Kore",
+    voice: "Sulafat",
+    sprechweise:
+      "Erfahrene Zahnärztin Mitte fünfzig, freundlich, aber im Stress zwischen zwei Patienten: spricht zügig und beiläufig, viele „mhm“, „okay“, „ja, und?“; unterbricht kurz, wenn etwas unklar ist; klingt wie jemand, der nebenbei noch in die Akte schaut.",
     persona: `${KOLLEGE_ROLLE} Du bist freundlich, aber zeitlich knapp, und erwartest eine strukturierte Vorstellung.`,
     facts: [
       "Achte darauf, ob Zahnangaben (38, 48, 47) und Dosierungen präzise genannt werden; frage nach, wenn etwas ungenau ist.",
@@ -246,7 +248,9 @@ export const mundAntrumVerbindung26: CaseInput = {
   actorCard: {
     role: "kollege",
     name: "Dr. Martin Brandt",
-    voice: "Iapetus",
+    voice: "Sadaltager",
+    sprechweise:
+      "Erfahrener Kollege Anfang sechzig, ruhig und bedächtig, tiefe Stimme; denkt hörbar nach („hm … verstehe … und wie war das mit …?“); spricht nicht schnell, aber auch nicht wie ein Nachrichtensprecher, sondern locker kollegial.",
     persona: `${KOLLEGE_ROLLE} Du bist ruhig und genau und fragst gezielt nach Risiken und Medikamenten.`,
     facts: ["Achte auf korrekte Dosierungen und darauf, ob die Bisphosphonat-Therapie erwähnt wird; frage nach, wenn etwas fehlt."],
     followUpQuestions: [

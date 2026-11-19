@@ -52,6 +52,7 @@ describe("Fallpool", () => {
     const json = JSON.stringify(toPublicCase(c));
     for (const fact of c.actorCard?.facts ?? []) expect(json).not.toContain(fact);
     if (c.actorCard) expect(json).not.toContain(c.actorCard.persona);
+    if (c.actorCard) expect(json).not.toContain(c.actorCard.sprechweise);
     for (const b of c.beispiele) for (const s of b.saetze) expect(json).not.toContain(s);
     if (c.arztbrief) {
       expect(json).not.toContain(c.arztbrief.musterbrief.slice(0, 60));
@@ -67,6 +68,21 @@ describe("Gesprächsfälle", () => {
     for (const fact of c.actorCard!.facts) expect(prompt).toContain(fact);
     for (const q of c.actorCard!.followUpQuestions) expect(prompt).toContain(q);
     expect(prompt).toContain("NIEMALS Haftungshinweise");
+  });
+
+  it.each(gespraeche)("$id: Rollenanweisung enthält Sprechweise und Regeln für natürliches Sprechen", (c) => {
+    const prompt = buildActorInstruction(c);
+    expect(prompt).toContain(c.actorCard!.sprechweise);
+    expect(prompt).toContain("## So sprichst du");
+    expect(prompt).toContain("NIEMALS Regieanweisungen");
+    expect(prompt).toMatch(/nicht überdeutlich/i);
+  });
+
+  it("verschiedene Rollen einer Station haben verschiedene Stimmen", () => {
+    for (const typ of stationTypeSchema.options) {
+      const stimmen = listCasesByStation(typ).flatMap((c) => (c.actorCard ? [c.actorCard.voice] : []));
+      expect(new Set(stimmen).size, typ).toBe(stimmen.length);
+    }
   });
 
   it.each(gespraeche)("$id: gültige Stimme und mind. 3 Rückfragen", (c) => {

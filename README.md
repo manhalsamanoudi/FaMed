@@ -16,7 +16,7 @@ Planung und Hintergründe: [docs/PLANUNG.md](docs/PLANUNG.md)
 | 4 | Arztbrief (Gespräch anhören, Brief schreiben) | Schriftliche Station | 22 Min. | 4 (3 nach den FaMed-Arztbriefvideos) |
 
 - Fälle: `src/content/cases/` (je Station eine Datei, Aufgabenblatt wie im Übungstest, verdeckte Rollenkarte, Bewertungs-Checkliste, Beispielformulierungen)
-- Gespräche: **Gemini Live API** (Audio rein/raus, Live-Transkript)
+- Gespräche: **Gemini Live API** (Audio rein/raus, Live-Transkript). Jede Rolle hat eine eigene `sprechweise` (Alter, Färbung, Stimmung, körperlicher Zustand); dazu allgemeine Regeln für gesprochene Alltagssprache, damit die Stimmen menschlich und nicht überdeutlich klingen. Stimmen per Casting ausgewählt.
 - Auswertung: **Gemini Flash** mit Ausweichkette – Punkte je Kriteriencluster, Checkliste, Fehlerliste, Laiensprache-Check, Beispielformulierungen bzw. Musterbrief
 - Arztbrief-Audio: einmalig mit Gemini TTS erzeugt (`npm run audio:arztbrief`, einzelner Fall: `-- --nur=<fall-id>`), liegt in `public/audio/`. Natürliche Sprechweise über `sprechweise` je Sprecher, `stil` je Zeile und Geräusche wie `[seufzt]` im Text.
 - Arztbrief-Korrektur: Aufbau und Regeln nach dem FaMed-Musterbrief (Konjunktiv I für Patientenaussagen, Indikativ/Passiv für eigene Befunde, ganze Sätze, Fachsprache)
@@ -75,6 +75,7 @@ Kostenlose Stufe: Nach 15 Minuten ohne Nutzung schläft die App ein, das erste �
 | `npm run typecheck` | TypeScript prüfen |
 | `npm run lint` | ESLint |
 | `npm run build` | Produktions-Build |
+| `npm run stimmprobe` | Stimmprobe aller Gesprächsrollen über den laufenden Dev-Server, mit KI-Bewertung der Natürlichkeit (Ergebnisse in `.stimmproben/`). Stimmen-Casting: `npm run stimmprobe -- <fall-id> --stimmen=Puck,Achird` |
 
 ## Struktur
 

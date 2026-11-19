@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "smoke": "node --env-file=.env.local scripts/smoke-test.mjs",
-    "audio:arztbrief": "node --env-file=.env.local scripts/generate-arztbrief-audio.mjs"
+    "audio:arztbrief": "node --env-file=.env.local scripts/generate-arztbrief-audio.mjs",
+    "stimmprobe": "node --env-file=.env.local scripts/stimmprobe.mjs"
   },
   "dependencies": {
     "@google/genai": "^3.4.0",

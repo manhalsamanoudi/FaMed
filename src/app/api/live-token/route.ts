@@ -9,6 +9,8 @@ const bodySchema = z.object({
   caseId: z.string().min(1),
   /** Handle aus einer vorherigen Sitzung, um nach einem Verbindungsabbruch fortzusetzen */
   resumeHandle: z.string().min(1).optional(),
+  /** Nur Entwicklung (scripts/stimmprobe.mjs): andere Stimme ausprobieren */
+  stimme: z.string().regex(/^[A-Za-z]+$/).optional(),
 });
 
 /**
@@ -30,6 +32,8 @@ export async function POST(request: Request) {
     return Response.json({ error: "Fall nicht gefunden." }, { status: 404 });
   }
   const actor = c.actorCard;
+  const voiceName =
+    process.env.NODE_ENV !== "production" && parsed.data.stimme ? parsed.data.stimme : actor.voice;
 
   try {
     const env = getServerEnv();
@@ -39,7 +43,8 @@ export async function POST(request: Request) {
       responseModalities: [Modality.AUDIO],
       systemInstruction: buildActorInstruction(c),
       speechConfig: {
-        voiceConfig: { prebuiltVoiceConfig: { voiceName: actor.voice } },
+        languageCode: "de-DE",
+        voiceConfig: { prebuiltVoiceConfig: { voiceName } },
       },
       inputAudioTranscription: { customVocabulary: c.vocabulary },
       outputAudioTranscription: {},
