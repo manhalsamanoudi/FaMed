@@ -48,10 +48,14 @@ export async function POST(request: Request) {
       throw new Error(`Audio-Upload nicht verarbeitet (Status ${file.state}).`);
     }
 
-    const result = await runEvaluation(ai, env.evalModels, c, [
-      createPartFromUri(file.uri, "audio/wav"),
-      buildEvaluationPrompt(c, typeof transcript === "string" ? transcript : ""),
-    ]);
+    const transkript = typeof transcript === "string" ? transcript.slice(0, 60_000) : "";
+    const result = await runEvaluation(
+      ai,
+      env.evalModels,
+      c,
+      [createPartFromUri(file.uri, "audio/wav"), buildEvaluationPrompt(c, transkript)],
+      { art: "gespraech", transkript },
+    );
     return Response.json(result);
   } catch (err) {
     if (err instanceof InvalidEvaluationError) {

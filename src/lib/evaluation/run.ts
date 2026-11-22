@@ -2,7 +2,8 @@ import type { GenerateContentResponse, GoogleGenAI, PartUnion } from "@google/ge
 import { z } from "zod";
 import type { Case } from "@/lib/cases/schema";
 import { AllModelsBusyError, isRetryableModelError } from "@/lib/server/env";
-import { checklistCoverage, evaluationSchema, overallScore, type EvaluateResponse } from "./schema";
+import { belegteFachbegriffe, belegteFaktenfehler, briefKennzahlen, gespraechsKennzahlen, wendeRegelnAn, zaehleWoerter } from "./regeln";
+import { checklistCoverage, evaluationSchema, type EvaluateResponse, type Kennzahlen } from "./schema";
 
 /** Höchstwartezeit pro Modell, bevor auf das nächste ausgewichen wird. */
 const MODEL_TIMEOUT_MS = 90_000;
@@ -14,15 +15,20 @@ export class InvalidEvaluationError extends Error {
   }
 }
 
+/** Was der Prüfling abgegeben hat: Gespräch (Live-Transkript) oder Brief. */
+export type Abgabe = { art: "gespraech"; transkript: string } | { art: "brief"; brief: string };
+
 /**
  * Ruft Gemini mit Ausweichkette auf (bei Überlastung nächstes Modell),
- * prüft die JSON-Antwort und baut die Antwort für den Browser.
+ * prüft die JSON-Antwort, wendet die festen Prüfungsregeln an und baut die
+ * Antwort für den Browser.
  */
 export async function runEvaluation(
   ai: GoogleGenAI,
   models: string[],
   c: Case,
   contents: PartUnion[],
+  abgabe: Abgabe,
 ): Promise<EvaluateResponse> {
   const jsonSchema = z.toJSONSchema(evaluationSchema);
   let response: GenerateContentResponse | null = null;
@@ -35,7 +41,7 @@ export async function runEvaluation(
         config: {
           responseMimeType: "application/json",
           responseJsonSchema: jsonSchema,
-          temperature: 0.2,
+          temperature: 0.1,
           httpOptions: { timeout: MODEL_TIMEOUT_MS },
         },
       });
@@ -60,11 +66,40 @@ export async function runEvaluation(
     throw new InvalidEvaluationError();
   }
 
+  const roh = parsed.data;
+  let kennzahlen: Kennzahlen;
+  if (abgabe.art === "brief") {
+    // Nur Faktenfehler, die wörtlich im Brief stehen (gegen Fehlalarme des Modells).
+    roh.faktenfehler = belegteFaktenfehler(roh, abgabe.brief);
+    kennzahlen = briefKennzahlen(abgabe.brief);
+  } else {
+    // Nur was der Prüfling gesagt hat (Live-Transkript ohne die Rolle + Audio-Transkript).
+    const eigene = abgabe.transkript
+      .split(/\r?\n/)
+      .filter((z) => z.startsWith("Zahnarzt:"))
+      .join("\n");
+    roh.faktenfehler = belegteFaktenfehler(roh, eigene, roh.wortgetreuesTranskript);
+    roh.nichtErklaerteFachbegriffe = belegteFachbegriffe(roh, eigene, roh.wortgetreuesTranskript);
+    kennzahlen = gespraechsKennzahlen(abgabe.transkript, roh.wortgetreuesTranskript);
+  }
+
   const weights = Object.fromEntries(c.rubric.checklist.map((i) => [i.id, i.weight]));
+  const coverage = checklistCoverage(roh, weights);
+  const regel = wendeRegelnAn(roh, {
+    station: c.stationType,
+    coverage,
+    kennzahlen,
+    musterWoerter: c.arztbrief ? zaehleWoerter(c.arztbrief.musterbrief) : undefined,
+  });
+
   return {
-    evaluation: parsed.data,
-    overall: overallScore(parsed.data),
-    coverage: checklistCoverage(parsed.data, weights),
+    evaluation: regel.evaluation,
+    station: c.stationType,
+    overall: regel.overall,
+    bestanden: regel.bestanden,
+    coverage,
+    hinweise: regel.hinweise,
+    kennzahlen,
     checklistLabels: Object.fromEntries(c.rubric.checklist.map((i) => [i.id, i.label])),
     model: usedModel,
     beispiele: c.beispiele,

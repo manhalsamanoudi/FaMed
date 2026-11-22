@@ -29,7 +29,11 @@ export async function POST(request: Request) {
   try {
     const env = getServerEnv();
     const ai = createServerClient(env.apiKey);
-    const result = await runEvaluation(ai, env.evalModels, c, [buildLetterEvaluationPrompt(c, parsed.data.brief)]);
+    const brief = parsed.data.brief;
+    const result = await runEvaluation(ai, env.evalModels, c, [buildLetterEvaluationPrompt(c, brief)], {
+      art: "brief",
+      brief,
+    });
     return Response.json(result);
   } catch (err) {
     if (err instanceof InvalidEvaluationError) {

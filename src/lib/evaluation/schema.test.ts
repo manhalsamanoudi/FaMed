@@ -4,6 +4,14 @@ import { checklistCoverage, evaluationSchema, overallScore, type Evaluation } fr
 
 const sample: Evaluation = {
   wortgetreuesTranskript: "Guten Tag, ähm, mein Name ist …",
+  bewertungsbogen: {
+    aufgabenerfuellung: "a",
+    klarheit: "b",
+    angemessenheit: "c",
+    fehler: "d",
+    gesamteindruck: "e",
+  },
+  faktenfehler: [],
   cluster: {
     textsorte: { punkte: 70, begruendung: "" },
     pragmatik: { punkte: 60, begruendung: "" },
@@ -19,6 +27,7 @@ const sample: Evaluation = {
   ausspracheHinweise: [],
   fluessigkeit: "",
   empfehlungen: ["x", "y", "z"],
+  fehlerAnzahl: 0,
 };
 
 describe("Bewertung", () => {

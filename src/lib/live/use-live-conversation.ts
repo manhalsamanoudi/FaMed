@@ -25,6 +25,7 @@ type Internals = {
   awaitingFirstAudio: boolean;
   endedByUser: boolean;
   reconnecting: boolean;
+  setupDone: boolean;
   deadline: number;
   interval: ReturnType<typeof setInterval> | null;
 };
@@ -41,6 +42,7 @@ function freshInternals(): Internals {
     awaitingFirstAudio: true,
     endedByUser: false,
     reconnecting: false,
+    setupDone: false,
     deadline: 0,
     interval: null,
   };
@@ -92,6 +94,8 @@ export function useLiveConversation(caseId: string, durationSeconds: number) {
 
   const handleMessage = useCallback((msg: LiveServerMessage) => {
     const i = r.current;
+    // Erst nach der Einrichtung Mikrofon-Ton senden, sonst kann die Spracherkennung hängen.
+    if (msg.setupComplete) i.setupDone = true;
     const update = msg.sessionResumptionUpdate;
     if (update?.resumable && update.newHandle) i.resumeHandle = update.newHandle;
 
@@ -171,6 +175,7 @@ export function useLiveConversation(caseId: string, durationSeconds: number) {
         throw new Error(data.error ?? `Token-Anfrage fehlgeschlagen (${res.status}).`);
       }
       const ai = new GoogleGenAI({ apiKey: data.token, httpOptions: { apiVersion: "v1beta" } });
+      r.current.setupDone = false;
       r.current.session = await ai.live.connect({
         model: data.model,
         config: { responseModalities: [Modality.AUDIO] },
@@ -206,6 +211,7 @@ export function useLiveConversation(caseId: string, durationSeconds: number) {
         // Echo der Rolle aus den Lautsprechern nicht als Nutzersprache werten.
         if (level > VOICE_LEVEL && !i.player?.isPlaying) i.lastVoiceAt = performance.now();
         setMicLevel(level);
+        if (!i.setupDone) return;
         try {
           i.session?.sendRealtimeInput({
             audio: { data: int16ToBase64(pcm16k), mimeType: `audio/pcm;rate=${INPUT_SAMPLE_RATE}` },

@@ -6,7 +6,7 @@ import { aufklaerungsFall } from "./helpers";
  */
 
 const PATIENT_REGELN_AUFKLAERUNG =
-  "Du bekommst heute ein Aufklärungsgespräch. Hör zu, reagiere kurz und natürlich, und stelle deine Fragen. Erzähle von dir aus nur wenig.";
+  "Du bekommst heute ein Aufklärungsgespräch. Die Zahnärztin bzw. der Zahnarzt redet die meiste Zeit; du hörst zu und erzählst von dir aus fast nichts.";
 
 export const implantation36 = aufklaerungsFall({
   id: "aufklaerung-implantation-36",
@@ -165,7 +165,7 @@ export const parodontitisAit = aufklaerungsFall({
     followUpQuestions: [
       "Kann ich durch die Parodontitis meine Zähne verlieren?",
       "Hat das etwas mit meinem Zucker zu tun?",
-      "Tut die Behandlung weh, und wie oft muss ich kommen?",
+      "Tut die Behandlung weh?",
     ],
   },
   fachbegriffe: ["Parodontitis", "antiinfektiöse Therapie", "Sondierungstiefen", "Quadranten", "Chlorhexidin", "Interdentalbürsten", "Hypothyreose", "Diabetes mellitus"],

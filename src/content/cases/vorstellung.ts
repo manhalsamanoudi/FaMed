@@ -106,15 +106,15 @@ export const dentitioDifficilis: CaseInput = {
     name: "Dr. Sabine Lorenz",
     voice: "Sulafat",
     sprechweise:
-      "Erfahrene Zahnärztin Mitte fünfzig, freundlich, aber im Stress zwischen zwei Patienten: spricht zügig und beiläufig, viele „mhm“, „okay“, „ja, und?“; unterbricht kurz, wenn etwas unklar ist; klingt wie jemand, der nebenbei noch in die Akte schaut.",
+      "Erfahrene Zahnärztin Mitte fünfzig, freundlich, aber im Stress zwischen zwei Patienten: spricht zügig und beiläufig, viele „mhm“, „okay“, „ja, und?“; hört zu und fragt erst am Ende kurz nach; klingt wie jemand, der nebenbei noch in die Akte schaut.",
     persona: `${KOLLEGE_ROLLE} Du bist freundlich, aber zeitlich knapp, und erwartest eine strukturierte Vorstellung.`,
     facts: [
       "Achte darauf, ob Zahnangaben (38, 48, 47) und Dosierungen präzise genannt werden; frage nach, wenn etwas ungenau ist.",
     ],
     followUpQuestions: [
-      "Welche Beschwerden hat der Patient genau geäußert?",
-      "Was hat das OPG gezeigt – gibt es Hinweise auf eine Zyste oder Resorption an 47?",
-      "Warum wird erst nach Abklingen der akuten Entzündung extrahiert, und worüber muss der Patient aufgeklärt werden?",
+      "Welche Beschwerden hat der Patient genau?",
+      "Was hat das OPG gezeigt?",
+      "Wie geht es jetzt weiter?",
     ],
   },
   rubric: {
@@ -254,9 +254,9 @@ export const mundAntrumVerbindung26: CaseInput = {
     persona: `${KOLLEGE_ROLLE} Du bist ruhig und genau und fragst gezielt nach Risiken und Medikamenten.`,
     facts: ["Achte auf korrekte Dosierungen und darauf, ob die Bisphosphonat-Therapie erwähnt wird; frage nach, wenn etwas fehlt."],
     followUpQuestions: [
-      "Wie haben Sie die Mund-Antrum-Verbindung nachgewiesen?",
-      "Die Patientin nimmt ein Bisphosphonat – was bedeutet das für die Operation?",
-      "Warum Clindamycin und nicht Amoxicillin?",
+      "Welche Medikamente nimmt die Patientin?",
+      "Was hat das Röntgenbild gezeigt?",
+      "Welches Antibiotikum bekommt sie?",
     ],
   },
   rubric: { checklist: checklisteVorstellung(), fachbegriffe: [] },

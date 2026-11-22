@@ -2,8 +2,17 @@ import { EndSensitivity, Modality, type LiveConnectConfig } from "@google/genai"
 import { z } from "zod";
 import { getCase } from "@/content/cases";
 import { requireAccess } from "@/lib/access/session";
+import type { StationType } from "@/lib/cases/schema";
 import { buildActorInstruction } from "@/lib/live/actor-prompt";
 import { createServerClient, errorResponse, getServerEnv } from "@/lib/server/env";
+
+/** Stille (ms), nach der ein Redebeitrag des Prüflings als beendet gilt. */
+const STILLE_MS: Record<StationType, number> = {
+  anamnese: 1000,
+  aufklaerung: 1600,
+  vorstellung: 1600,
+  arztbrief: 1000,
+};
 
 const bodySchema = z.object({
   caseId: z.string().min(1),
@@ -50,11 +59,14 @@ export async function POST(request: Request) {
       outputAudioTranscription: {},
       realtimeInputConfig: {
         automaticActivityDetection: {
-          // Denkpausen sollen das Gespräch nicht abschneiden.
+          // Denkpausen sollen das Gespräch nicht abschneiden. Bei Aufklärung und
+          // Patientenvorstellung redet der Prüfling lange am Stück – dort mehr Geduld.
           endOfSpeechSensitivity: EndSensitivity.END_SENSITIVITY_LOW,
-          silenceDurationMs: 800,
+          silenceDurationMs: STILLE_MS[c.stationType],
         },
       },
+      // Die Rolle darf schweigen, wenn der Prüfling nur eine Pause macht und nichts fragt.
+      proactivity: { proactiveAudio: true },
       sessionResumption: parsed.data.resumeHandle
         ? { handle: parsed.data.resumeHandle }
         : {},

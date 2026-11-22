@@ -162,10 +162,10 @@ export const abszessExtraktion46: CaseInput = vorstellungsFall({
       "Achte auf die korrekte Zahnangabe 46 und die Reihenfolge Inzision → Extraktion → Kontrolle.",
     ],
     followUpQuestions: [
-      "Warum haben Sie sich für Clindamycin entschieden?",
-      "Warum ist der Zahn 46 nicht erhaltungswürdig?",
-      "Gab es Hinweise auf eine Beteiligung des Mandibularkanals oder Sensibilitätsstörungen?",
-      "Wann sehen Sie den Patienten wieder, und was planen Sie danach?",
+      "Hat der Patient Allergien?",
+      "Welches Antibiotikum bekommt er?",
+      "Was hat das OPG gezeigt?",
+      "Wann sehen Sie ihn wieder?",
     ],
   },
   vocabulary: [
@@ -271,9 +271,10 @@ export const alveolitis15: CaseInput = vorstellungsFall({
       "Achte darauf, ob die Röntgenkontrolle (Ausschluss Wurzelrest/Fremdkörper) und der Rauchverzicht erwähnt werden.",
     ],
     followUpQuestions: [
-      "Wie haben Sie einen Wurzelrest oder einen Fremdkörper ausgeschlossen?",
-      "Was genau legen Sie in die Alveole ein, und wie oft wechseln Sie die Einlage?",
-      "Würden Sie hier ein Antibiotikum geben? Warum bzw. warum nicht?",
+      "Wann wurde der Zahn gezogen?",
+      "Was hat der Zahnfilm gezeigt?",
+      "Raucht die Patientin?",
+      "Wann kommt sie zur Kontrolle?",
     ],
   },
   vocabulary: [
@@ -368,17 +369,17 @@ export const insuffizienteWkb36: CaseInput = vorstellungsFall({
     name: "Dr. Andreas Kühn",
     voice: "Algenib",
     sprechweise:
-      "Kollege Ende vierzig, Endodontie-Fan, interessiert und etwas kritisch; spricht zügig, denkt laut mit („hm, okay … und Revision?“), unterbricht freundlich, wenn ihm etwas fehlt; nicht überdeutlich.",
-    persona: `${KOLLEGE_ROLLE} Du bist auf Endodontie spezialisiert und fragst kritisch, warum keine Revision gemacht wird.`,
+      "Kollege Ende vierzig, Endodontie-Fan, interessiert und etwas kritisch; spricht zügig, hört erst zu und fragt am Ende knapp nach („hm, okay … und der Zahnfilm?“); nicht überdeutlich.",
+    persona: `${KOLLEGE_ROLLE} Du bist auf Endodontie spezialisiert und interessierst dich besonders für den Röntgenbefund.`,
     facts: [
       "Achte darauf, dass die Diagnose als persistierende apikale Parodontitis an 36 bezeichnet wird und die Gründe für die ungünstige Prognose genannt werden.",
       "Achte auf die korrekte Dosierung Metformin 1000 mg zweimal täglich.",
     ],
     followUpQuestions: [
-      "Warum haben Sie keine Revision der Wurzelkanalbehandlung oder Wurzelspitzenresektion in Betracht gezogen?",
-      "Was hat der Zahnfilm genau gezeigt?",
-      "Welche Rolle spielt der Diabetes für die Wundheilung?",
-      "Wie soll die Lücke später versorgt werden?",
+      "Wann wurde die Wurzelbehandlung gemacht?",
+      "Was hat der Zahnfilm gezeigt?",
+      "Welche Medikamente nimmt der Patient?",
+      "Wie geht es jetzt weiter?",
     ],
   },
   vocabulary: [
@@ -486,10 +487,10 @@ export const osteonekrose: CaseInput = vorstellungsFall({
       "Achte darauf, dass keine weitere Extraktion oder Kürettage in der Praxis geplant wird, sondern die Überweisung in die MKG-Chirurgie.",
     ],
     followUpQuestions: [
-      "Welches Medikament bekommt die Patientin wegen ihrer Tumorerkrankung, und seit wann?",
-      "Was spricht in Ihren Befunden für eine Osteonekrose und nicht für eine einfache Wundheilungsstörung?",
-      "Warum überweisen Sie in die MKG-Chirurgie und behandeln nicht selbst?",
-      "Was kann man solchen Patientinnen vor Beginn einer antiresorptiven Therapie empfehlen?",
+      "Welche Medikamente nimmt die Patientin?",
+      "Seit wann bekommt sie die Zoledronsäure?",
+      "Was hat das OPG gezeigt?",
+      "Wie geht es jetzt weiter?",
     ],
   },
   vocabulary: [
@@ -589,10 +590,10 @@ export const parodontitisUebungstest: CaseInput = vorstellungsFall({
       "Achte darauf, dass der PSI sextantenweise korrekt genannt wird (4 – 4 – 4 / 3 – 4 – 4) und die Latexallergie erwähnt wird.",
     ],
     followUpQuestions: [
-      "Welche Risikofaktoren hat die Patientin für eine Parodontitis?",
-      "Wie hoch war der PSI, und was bedeutet ein Code 4?",
-      "Was ist bei der Latexallergie in der Behandlung zu beachten?",
-      "Wann und wie wollen Sie den Therapieerfolg überprüfen?",
+      "Welche Beschwerden hat die Patientin?",
+      "Gibt es Risikofaktoren für eine Parodontitis?",
+      "Welche Befunde sprechen für eine Parodontitis?",
+      "Hat die Patientin Allergien?",
     ],
   },
   vocabulary: [
@@ -720,9 +721,9 @@ export const submukoeserAbszess11: CaseInput = vorstellungsFall({
       "Achte auf die korrekte Zahnangabe 11 sowie die Dosierungen (Ibuprofen 600 mg, Chlorhexidin 0,2 %).",
     ],
     followUpQuestions: [
-      "Hat die Patientin Fieber, und braucht sie ein Antibiotikum?",
-      "Warum beginnen Sie nicht sofort mit der Wurzelkanalbehandlung?",
-      "Was hat die Röntgenaufnahme gezeigt – gibt es eine Fraktur?",
+      "Hat die Patientin Fieber?",
+      "Was hat die Röntgenaufnahme gezeigt?",
+      "Welche Medikamente bekommt sie jetzt?",
       "Wann kontrollieren Sie die Drainage?",
     ],
   },
@@ -830,10 +831,10 @@ export const wurzellaengsfraktur36: CaseInput = vorstellungsFall({
       "Achte auf: INR-Grenzwert 3,5, Endokarditisprophylaxe mit Azithromycin 500 mg 60 Minuten vor dem Eingriff wegen Penicillinallergie, Marcumar 3 mg und Ramipril 2,5 mg.",
     ],
     followUpQuestions: [
-      "Muss die Patientin Marcumar vor der Extraktion absetzen?",
-      "Warum braucht sie eine Endokarditisprophylaxe, und warum gerade Azithromycin?",
-      "Woran haben Sie die Wurzellängsfraktur erkannt? Die Vitalität war ja positiv.",
-      "Welche lokalen Maßnahmen zur Blutstillung planen Sie?",
+      "Welche Medikamente nimmt die Patientin?",
+      "Muss sie Marcumar vor der Extraktion absetzen?",
+      "Braucht sie eine Endokarditisprophylaxe?",
+      "Was hat das Röntgenbild gezeigt?",
     ],
   },
   vocabulary: [

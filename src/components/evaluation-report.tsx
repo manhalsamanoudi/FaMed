@@ -4,6 +4,7 @@ import {
   type ClusterKey,
   type EvaluateResponse,
 } from "@/lib/evaluation/schema";
+import { BOGEN_KEYS, leitfragen } from "@/lib/evaluation/leitfragen";
 
 const STATUS_LABEL = { erfuellt: "erfüllt", teilweise: "teilweise", fehlt: "fehlt" } as const;
 const STATUS_CLASS = {
@@ -21,7 +22,9 @@ export function EvaluationReport({
   schriftlich?: boolean;
 }) {
   const e = result.evaluation;
-  const passed = result.overall >= PASS_THRESHOLD;
+  const passed = result.bestanden;
+  const fragen = leitfragen(result.station);
+  const k = result.kennzahlen;
 
   return (
     <section className="mt-8 space-y-6" aria-label="Auswertung">
@@ -29,9 +32,24 @@ export function EvaluationReport({
         <div className="flex flex-wrap items-baseline justify-between gap-3">
           <h2 className="text-xl font-semibold">Auswertung (KI-Schätzung)</h2>
           <span className={`text-lg font-semibold ${passed ? "text-success" : "text-danger"}`}>
-            {result.overall} / 100 · {passed ? "über" : "unter"} der {PASS_THRESHOLD}-%-Grenze
+            {result.overall} / 100 · {passed ? "bestanden" : "nicht bestanden"} (Grenze {PASS_THRESHOLD} %)
           </span>
         </div>
+        <p className="mt-1 text-sm text-muted">
+          {k.art === "gespraech"
+            ? `Ihre Wörter: ca. ${k.woerterPruefling}${k.redeanteil !== null ? ` · Ihr Redeanteil: ${k.redeanteil} %` : ""} · Rückfragen der Rolle: ${k.rollenfragen}`
+            : `${k.woerter} Wörter · Patientenaussagen: ${k.konjunktiv}× Konjunktiv I, ${k.indikativ}× Indikativ${k.stichpunktZeilen > 0 ? ` · ${k.stichpunktZeilen} Stichpunkt-Zeilen` : ""}`}
+        </p>
+        {result.hinweise.length > 0 && (
+          <div className="mt-4 rounded-lg border border-danger/40 p-3 text-sm">
+            <p className="font-medium">Angewendete Prüfungsregeln</p>
+            <ul className="mt-1 list-disc space-y-1 pl-5">
+              {result.hinweise.map((h) => (
+                <li key={h}>{h}</li>
+              ))}
+            </ul>
+          </div>
+        )}
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
           {(Object.keys(CLUSTERS) as ClusterKey[]).map((k) => (
             <div key={k}>
@@ -52,6 +70,32 @@ export function EvaluationReport({
           ))}
         </div>
       </div>
+
+      <div className="rounded-xl border border-border bg-card p-5">
+        <h3 className="font-semibold">Bewertungsbogen</h3>
+        <p className="mt-1 text-sm text-muted">Die Leitfragen, auf die die Bewertenden in der FaMed achten.</p>
+        <dl className="mt-3 space-y-3 text-sm">
+          {BOGEN_KEYS.map((key) => (
+            <div key={key}>
+              <dt className="font-medium">{fragen[key]}</dt>
+              <dd className="mt-0.5 text-muted">{e.bewertungsbogen[key]}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+
+      {e.faktenfehler.length > 0 && (
+        <div className="rounded-xl border border-danger/40 bg-card p-5">
+          <h3 className="font-semibold">Falsch übertragene Angaben</h3>
+          <ul className="mt-2 space-y-1 text-sm">
+            {e.faktenfehler.map((f) => (
+              <li key={f.zitat}>
+                <span className="text-danger">„{f.zitat}“</span> → richtig: <span className="text-success">{f.richtig}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       <div className="rounded-xl border border-border bg-card p-5">
         <h3 className="font-semibold">Top-Empfehlungen</h3>
@@ -174,7 +218,9 @@ export function EvaluationReport({
       )}
 
       <p className="text-xs text-muted">
-        Bewertet von {result.model}. Schätzung ohne Gewähr – keine Prognose für die echte Prüfung.
+        Bewertet von {result.model} nach den vier Kriterienclustern der FaMed. In der echten Prüfung muss jede der drei
+        Stationen (Zahnarzt-Patient, Zahnarzt-Zahnarzt, Arztbrief) mindestens 60 % erreichen; ein Ausgleich ist nicht
+        möglich. Schätzung ohne Gewähr – keine Prognose für die echte Prüfung.
       </p>
     </section>
   );
