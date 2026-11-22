@@ -1,14 +1,14 @@
 import type { CaseInput } from "@/lib/cases/schema";
 import { AUFGABEN_VORSTELLUNG, ELF_MINUTEN, checklisteVorstellung } from "./helpers";
 
-const KOLLEGE_ROLLE =
+export const KOLLEGE_ROLLE =
   "Du bist eine erfahrene Zahnärztin bzw. ein erfahrener Zahnarzt in derselben Praxis. Du kennst den Fall nicht; du kennst nur, was dir vorgestellt wird.";
 
-function kurzbeschreibung(kollege: string) {
+export function kurzbeschreibung(kollege: string) {
   return `Sie haben heute einen neuen Patienten/eine neue Patientin behandelt und möchten mit Ihrem erfahrenen Kollegen/Ihrer erfahrenen Kollegin kurz darüber sprechen. Sie sprechen mit ${kollege}. Sie haben für die gesamte Situation maximal 11 Minuten Zeit.`;
 }
 
-function aufgabentext(kollege: string) {
+export function aufgabentext(kollege: string) {
   return {
     einleitung:
       "Entnehmen Sie der Fallbeschreibung alle notwendigen Informationen und berichten Sie Ihrem Kollegen/Ihrer Kollegin folgende Punkte:",

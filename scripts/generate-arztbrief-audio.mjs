@@ -8,6 +8,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { GoogleGenAI } from "@google/genai";
 import { ARZTBRIEF_FAELLE } from "../src/content/cases/arztbrief.ts";
+import { ARZTBRIEF_PRUEFUNG } from "../src/content/cases/arztbrief-pruefung.ts";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const force = process.argv.includes("--force");
@@ -62,7 +63,7 @@ async function erzeuge(fall) {
   return res.output_audio;
 }
 
-for (const fall of ARZTBRIEF_FAELLE) {
+for (const fall of [...ARZTBRIEF_FAELLE, ...ARZTBRIEF_PRUEFUNG]) {
   if (nur && fall.id !== nur) continue;
   const a = fall.arztbrief;
   const target = join(root, "public", a.audioSrc);

@@ -11,11 +11,11 @@ Planung und Hintergründe: [docs/PLANUNG.md](docs/PLANUNG.md)
 | Nr. | Situation | Bereich | Zeit | Fälle |
 |---|---|---|---|---|
 | 1 | Anamnesegespräch (inkl. Röntgenbefund erklären) | Zahnarzt-Patienten-Kommunikation | 11 Min. | 2 |
-| 2 | Aufklärungsgespräch | Zahnarzt-Patienten-Kommunikation | 11 Min. | 7 (aus eigenen Unterlagen) |
-| 3 | Patientenvorstellung | Zahnarzt-Zahnarzt-Kommunikation | 11 Min. | 2 |
-| 4 | Arztbrief (Gespräch anhören, Brief schreiben) | Schriftliche Station | 22 Min. | 4 (3 nach den FaMed-Arztbriefvideos) |
+| 2 | Aufklärungsgespräch | Zahnarzt-Patienten-Kommunikation | 11 Min. | 8 (aus eigenen Unterlagen, inkl. Übungstest-WKB) |
+| 3 | Patientenvorstellung | Zahnarzt-Zahnarzt-Kommunikation | 11 Min. | 9 (7 aus den Unterlagen „Fälle/PV“, inkl. 2 aus dem Übungstest) |
+| 4 | Arztbrief (Gespräch anhören, Brief schreiben) | Schriftliche Station | 22 Min. | 13 (3 nach den FaMed-Arztbriefvideos, 9 nach bisherigen Prüfungsfällen) |
 
-- Fälle: `src/content/cases/` (je Station eine Datei, Aufgabenblatt wie im Übungstest, verdeckte Rollenkarte, Bewertungs-Checkliste, Beispielformulierungen)
+- Fälle: `src/content/cases/` (je Station eine Datei, Aufgabenblatt wie im Übungstest, verdeckte Rollenkarte, Bewertungs-Checkliste, Beispielformulierungen). Prüfungsfälle Arztbrief: `arztbrief-pruefung.ts`, Patientenvorstellungen aus den Unterlagen: `vorstellung-unterlagen.ts`
 - Gespräche: **Gemini Live API** (Audio rein/raus, Live-Transkript). Jede Rolle hat eine eigene `sprechweise` (Alter, Färbung, Stimmung, körperlicher Zustand); dazu allgemeine Regeln für gesprochene Alltagssprache, damit die Stimmen menschlich und nicht überdeutlich klingen. Stimmen per Casting ausgewählt.
 - Auswertung: **Gemini Flash** mit Ausweichkette – Punkte je Kriteriencluster, Checkliste, Fehlerliste, Laiensprache-Check, Beispielformulierungen bzw. Musterbrief
 - Arztbrief-Audio: einmalig mit Gemini TTS erzeugt (`npm run audio:arztbrief`, einzelner Fall: `-- --nur=<fall-id>`), liegt in `public/audio/`. Natürliche Sprechweise über `sprechweise` je Sprecher, `stil` je Zeile und Geräusche wie `[seufzt]` im Text.

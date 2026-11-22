@@ -1,12 +1,19 @@
 import { caseSchema, type Case, type StationType } from "@/lib/cases/schema";
 import { ANAMNESE_FAELLE } from "./anamnese";
 import { ARZTBRIEF_FAELLE } from "./arztbrief";
+import { ARZTBRIEF_PRUEFUNG } from "./arztbrief-pruefung";
 import { AUFKLAERUNG_FAELLE } from "./aufklaerung";
 import { VORSTELLUNG_FAELLE } from "./vorstellung";
+import { VORSTELLUNG_UNTERLAGEN } from "./vorstellung-unterlagen";
 
-const ALL_CASES: Case[] = [...ANAMNESE_FAELLE, ...AUFKLAERUNG_FAELLE, ...VORSTELLUNG_FAELLE, ...ARZTBRIEF_FAELLE].map(
-  (c) => caseSchema.parse(c),
-);
+const ALL_CASES: Case[] = [
+  ...ANAMNESE_FAELLE,
+  ...AUFKLAERUNG_FAELLE,
+  ...VORSTELLUNG_FAELLE,
+  ...VORSTELLUNG_UNTERLAGEN,
+  ...ARZTBRIEF_FAELLE,
+  ...ARZTBRIEF_PRUEFUNG,
+].map((c) => caseSchema.parse(c));
 
 export function listCases(): Case[] {
   return ALL_CASES;

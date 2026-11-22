@@ -716,7 +716,111 @@ export const weisheitszaehne3848 = aufklaerungsFall({
   ],
 });
 
+/** Aufklärungsgespräch aus dem FaMed-Übungstest (Unterlagen „Fälle/Aufklärung“, mögliche Lösung). */
+export const wkb16 = aufklaerungsFall({
+  id: "aufklaerung-wkb-16",
+  title: "Wurzelkanalbehandlung Zahn 16",
+  untertitel: "Wie im Übungstest: irreversible Pulpitis, zwei Sitzungen, Diabetes mellitus",
+  anrede: "Herrn/Frau Sahin",
+  partner: "Frau P. Sahin (Patientin)",
+  situation: "Aufklärung über einen Eingriff, der demnächst stattfinden soll",
+  info: [
+    { label: "Name", wert: "P. Sahin" },
+    { label: "Eingriff", wert: "Wurzelkanalbehandlung" },
+    { label: "Dauer", wert: "ca. 30–45 Min.; zwei Behandlungssitzungen notwendig" },
+    { label: "Grund des Eingriffs", wert: "irreversible Pulpitis Zahn 16" },
+    {
+      label: "Ablauf",
+      wert: "Lokalanästhesie; Kofferdam; Kariesexkavation und Zugangskavität; Wurzelkanäle auffinden und darstellen; Bestimmung der Arbeitslänge; Aufbereiten der Kanäle; kontinuierliche Spülung der Kanäle; medikamentöse Einlage; bakteriendichter provisorischer Verschluss; zwei Röntgenbilder erstellen",
+    },
+    { label: "Vor-/Begleiterkrankungen", wert: "Diabetes mellitus Typ 2" },
+    { label: "Dauermedikation", wert: "Metformin 500 mg (1–0–1)" },
+  ],
+  allgemeineRisiken: "Schmerzen, Schwellung, Infektion, allergische Reaktion, Verletzung von Nachbarstrukturen",
+  spezielleRisiken: [
+    "Instrumentenfraktur, Via falsa/Perforation",
+    "unauffindbare Wurzelkanäle/nicht aufbereitbar",
+    "Überpressen von Spülflüssigkeiten/Füllmaterial",
+    "Persistenz oder Wiederauftreten der Beschwerden",
+  ],
+  la: ["Schmerzen, Schwellung, Infektion", "Verletzung benachbarter Strukturen (UK: N. lingualis)", "allergische Reaktion"],
+  prae: ["Medikamente normal einnehmen"],
+  post: [
+    "solange die Betäubung wirkt: nicht essen, nichts Heißes trinken (Verletzungsgefahr)",
+    "vorsichtig kauen, keine harten Speisen auf der behandelten Seite (Frakturgefahr des Zahnes)",
+    "bei leichten Aufbissschmerzen in den nächsten Tagen: Ibuprofen 600 mg; bei stärkeren Schmerzen: Wiedervorstellung",
+    "Weiterbehandlung in 2 Wochen",
+  ],
+  actor: {
+    role: "patient",
+    name: "Pınar Sahin",
+    voice: "Achernar",
+    sprechweise:
+      "Frau Mitte vierzig aus Köln, in Deutschland aufgewachsen, Verkäuferin; leicht rheinische Färbung („ne?“, „jetzt mal ehrlich“). Müde, weil der Zahn sie nachts wachhält; spricht etwas schneller, wenn sie nervös wird, und hält sich manchmal die Wange. Nicht überdeutlich, Alltagstempo.",
+    persona: `44 Jahre, Verkäuferin. Hat seit Tagen starke Zahnschmerzen oben rechts und kaum geschlafen. Sie hat Angst, dass der Zahn trotz Behandlung verloren geht, und mag keine Spritzen. ${PATIENT_REGELN_AUFKLAERUNG}`,
+    facts: [
+      "Seit vier Tagen hat sie starke, pochende Schmerzen oben rechts, vor allem nachts; Kaltes und Warmes tun lange weh.",
+      "Sie hat Diabetes Typ 2 und nimmt Metformin 500 mg morgens und abends; Allergien hat sie keine.",
+      "Ibuprofen verträgt sie gut.",
+    ],
+    followUpQuestions: [
+      "Warum muss ich zweimal kommen? Kann man das nicht in einem Termin machen?",
+      "Was ist dieses Gummituch? Bekomme ich darunter überhaupt Luft?",
+      "Kann der Zahn danach trotzdem kaputtgehen?",
+      "Muss ich wegen meines Diabetes irgendwas beachten?",
+    ],
+  },
+  fachbegriffe: [
+    "irreversible Pulpitis", "Wurzelkanalbehandlung", "Kofferdam", "Kariesexkavation", "Zugangskavität", "Arbeitslänge",
+    "medikamentöse Einlage", "Provisorium", "Instrumentenfraktur", "Via falsa", "Perforation",
+  ],
+  vocabulary: [
+    "Pulpitis", "Wurzelkanalbehandlung", "Kofferdam", "Kariesexkavation", "Zugangskavität", "Arbeitslänge", "Spülung",
+    "medikamentöse Einlage", "provisorisch", "Instrumentenfraktur", "Via falsa", "Perforation", "Metformin", "Ibuprofen",
+    "Nervus lingualis", "Diabetes",
+  ],
+  beispiele: [
+    {
+      zu: "Diagnose & Behandlungsgrund",
+      saetze: [
+        "Bei Ihnen liegt am ersten großen Backenzahn im rechten Oberkiefer eine nicht mehr heilbare Entzündung des Zahnnervs vor.",
+        "Das bedeutet, dass sich der Zahnnerv stark entzündet hat und sich nicht mehr erholen kann. Dadurch entstehen starke Schmerzen, und es kann sich Eiter ansammeln.",
+        "Ohne Behandlung kann sich die Entzündung weiter ausbreiten und bis in den Kieferknochen gelangen.",
+        "Deshalb empfehlen wir eine Wurzelkanalbehandlung, um die Entzündung zu beseitigen und den Zahn möglichst zu erhalten. Dafür brauchen wir zwei Sitzungen von jeweils etwa 30 bis 45 Minuten.",
+      ],
+    },
+    {
+      zu: "Ablauf",
+      saetze: [
+        "Die Behandlung erfolgt unter örtlicher Betäubung, sodass Sie keine Schmerzen spüren.",
+        "Zunächst wird der Zahn mit einem Gummituch isoliert, damit er vor Speichel geschützt ist. Danach wird die Karies entfernt und ein Zugang ins Innere des Zahnes geschaffen.",
+        "Anschließend suchen wir die Wurzelkanäle, bestimmen ihre genaue Länge und bereiten sie gründlich auf. Dabei werden die Kanäle immer wieder gespült, um Bakterien und Gewebereste zu entfernen.",
+        "Danach legen wir ein Medikament in die Kanäle ein, und zum Schluss wird der Zahn mit einer vorläufigen Füllung dicht verschlossen. Zur Kontrolle machen wir zwei Röntgenbilder.",
+      ],
+    },
+    {
+      zu: "Risiken",
+      saetze: [
+        "Wie bei jeder zahnärztlichen Behandlung kann es zu Schmerzen, Schwellungen, Infektionen oder allergischen Reaktionen kommen; selten werden benachbarte Strukturen verletzt.",
+        "Speziell bei der Wurzelkanalbehandlung kann in seltenen Fällen ein feines Instrument im Kanal abbrechen, oder die Kanalwand kann verletzt werden.",
+        "Manchmal sind Wurzelkanäle nicht auffindbar oder können nicht vollständig aufbereitet werden. Außerdem kann Spülflüssigkeit oder Füllmaterial über die Wurzelspitze hinaus gelangen.",
+        "Trotz der Behandlung können die Beschwerden bestehen bleiben oder wieder auftreten. Diese Risiken sind aber selten.",
+      ],
+    },
+    {
+      zu: "Vor und nach der Behandlung",
+      saetze: [
+        "Sie leiden an einer Zuckerkrankheit und nehmen Metformin 500 mg zweimal täglich ein. Ihre Medikamente können Sie vor der Behandlung wie gewohnt einnehmen.",
+        "Solange die Betäubung wirkt, sollten Sie nichts essen und nichts Heißes trinken, damit Sie sich nicht verletzen.",
+        "Bitte kauen Sie vorsichtig und essen Sie keine harten Speisen auf der behandelten Seite, da der Zahn brechen kann.",
+        "Bei leichten Aufbissschmerzen können Sie Ibuprofen 600 mg einnehmen; bei stärkeren Schmerzen melden Sie sich bitte bei uns. Die zweite Sitzung ist in zwei Wochen geplant.",
+      ],
+    },
+  ],
+});
+
 export const AUFKLAERUNG_FAELLE = [
+  wkb16,
   implantation36,
   parodontitisAit,
   wsr24,

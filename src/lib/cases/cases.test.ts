@@ -23,8 +23,9 @@ describe("Fallpool", () => {
     for (const typ of stationTypeSchema.options) expect(listCasesByStation(typ).length).toBeGreaterThan(0);
   });
 
-  it("enthält die 7 Aufklärungsthemen aus den Unterlagen", () => {
+  it("enthält die 8 Aufklärungsthemen aus den Unterlagen", () => {
     expect(listCasesByStation("aufklaerung").map((c) => c.title)).toEqual([
+      "Wurzelkanalbehandlung Zahn 16",
       "Implantation Zahn 36",
       "Parodontalbehandlung (AIT)",
       "Wurzelspitzenresektion Zahn 24",
