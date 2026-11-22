@@ -25,11 +25,26 @@ function joinFragments(a: string, b: string): string {
   return a + b;
 }
 
+/**
+ * Entfernt technische Markierungen aus dem Transkript. Schweigt die Rolle bewusst
+ * (proactiveAudio), liefert das Modell manchmal „<!-- No audio response -->“.
+ * Auch eine noch nicht abgeschlossene Markierung am Ende wird ausgeblendet.
+ */
+export function sichtbarerText(text: string): string {
+  return text
+    .replace(/<!--[\s\S]*?-->/g, " ")
+    .replace(/<!--[\s\S]*$/, "")
+    .replace(/\s{2,}/g, " ")
+    .replace(/^[.…\s]+$/, "")
+    .trim();
+}
+
 /** Text-Darstellung für Bewertung und Export. */
 export function formatTranscript(turns: Turn[], labels: Record<Speaker, string>): string {
   return turns
-    .filter((t) => t.text.trim().length > 0)
-    .map((t) => `${labels[t.role]}: ${t.text.trim()}`)
+    .map((t) => ({ ...t, text: sichtbarerText(t.text) }))
+    .filter((t) => t.text.length > 0)
+    .map((t) => `${labels[t.role]}: ${t.text}`)
     .join("\n");
 }
 

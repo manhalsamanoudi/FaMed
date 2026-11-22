@@ -6,7 +6,7 @@ import { handleUnauthorized } from "@/lib/access/client-events";
 import { STATIONS, type PublicCase } from "@/lib/cases/schema";
 import { CaseSheet } from "./case-sheet";
 import type { EvaluateResponse } from "@/lib/evaluation/schema";
-import { formatTranscript } from "@/lib/live/transcript";
+import { formatTranscript, sichtbarerText } from "@/lib/live/transcript";
 import { useLiveConversation } from "@/lib/live/use-live-conversation";
 import { EvaluationReport } from "./evaluation-report";
 
@@ -197,14 +197,17 @@ export function StationRunner({ caseData }: { caseData: PublicCase }) {
           </div>
           {showTranscript && (
             <ol className="mt-2 max-h-80 space-y-2 overflow-y-auto text-sm">
-              {conv.turns.map((t) => (
-                <li key={t.id}>
-                  <span className="font-medium">
-                    {t.role === "user" ? "Sie" : partnerLabel}:
-                  </span>{" "}
-                  {t.text}
-                </li>
-              ))}
+              {conv.turns
+                .map((t) => ({ ...t, text: sichtbarerText(t.text) }))
+                .filter((t) => t.text.length > 0)
+                .map((t) => (
+                  <li key={t.id}>
+                    <span className="font-medium">
+                      {t.role === "user" ? "Sie" : partnerLabel}:
+                    </span>{" "}
+                    {t.text}
+                  </li>
+                ))}
               {conv.turns.length === 0 && <li className="text-muted">Noch nichts gesprochen.</li>}
             </ol>
           )}

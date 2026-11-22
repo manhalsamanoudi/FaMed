@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { appendTranscript, formatTranscript, median, type Turn } from "./transcript";
+import { appendTranscript, formatTranscript, median, sichtbarerText, type Turn } from "./transcript";
 
 describe("appendTranscript", () => {
   it("fasst Fragmente derselben Person zusammen", () => {
@@ -24,6 +24,27 @@ describe("appendTranscript", () => {
   it("ignoriert leere Fragmente", () => {
     const t: Turn[] = [];
     expect(appendTranscript(t, "user", "")).toBe(t);
+  });
+});
+
+describe("sichtbarerText", () => {
+  it("entfernt die Schweige-Markierung des Modells, auch wenn sie in Stücken kommt", () => {
+    expect(sichtbarerText("<!-- No audio response -->")).toBe("");
+    expect(sichtbarerText("Okay. <!-- No audio response --> Danke.")).toBe("Okay. Danke.");
+    expect(sichtbarerText("Hallo <!-- No")).toBe("Hallo");
+    expect(sichtbarerText(" ... ")).toBe("");
+    expect(sichtbarerText("Na ja … gut.")).toBe("Na ja … gut.");
+  });
+
+  it("lässt leere Rollenbeiträge aus dem Bewertungs-Transkript weg", () => {
+    const turns: Turn[] = [
+      { id: 1, role: "user", text: "Zuerst bekommen Sie eine Betäubung." },
+      { id: 2, role: "actor", text: "<!-- No audio response -->" },
+      { id: 3, role: "user", text: "Haben Sie Fragen?" },
+    ];
+    expect(formatTranscript(turns, { user: "Zahnarzt", actor: "Patient:in" })).toBe(
+      "Zahnarzt: Zuerst bekommen Sie eine Betäubung.\nZahnarzt: Haben Sie Fragen?",
+    );
   });
 });
 
